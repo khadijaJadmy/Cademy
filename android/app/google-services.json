@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1076979275909",
+    "project_id": "crypto-ea59b",
+    "storage_bucket": "crypto-ea59b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076979275909:android:e5f618cac51ad5f78b31ec",
+        "android_client_info": {
+          "package_name": "com.example.crypto_wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076979275909-nau65m5kico6gohiikkan5ki41njg3ua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGWNu-umnQ5SYUp_B38rS1_sZZyxINhds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076979275909-nau65m5kico6gohiikkan5ki41njg3ua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,90 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
+class ExpansionTileCardDemo extends StatefulWidget {
+
+  @override
+  _ExpansionTileCardDemoState createState() => _ExpansionTileCardDemoState();
+}
+
+class _ExpansionTileCardDemoState extends State<ExpansionTileCardDemo> {
+  final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    var Firestore;
+    return Scaffold(
+
+      body: StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('formation').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) return Text('loanding data');
+          return ListView(
+         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20),
+            child: ExpansionTileCard(
+              baseColor: Colors.cyan[50],
+              expandedColor: Colors.red[50],
+              key: cardA,
+              leading: CircleAvatar(
+                  child: Image.network("https://www.codeur.com/blog/wp-content/uploads/2018/12/codeur-developpeur-web.jpg")
+              ),
+              title: Text("f"),
+              subtitle: Text("université Mundiapolis"),
+              children: <Widget>[
+                Divider(
+                  thickness: 1.0,
+                  height: 1.0,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    child: Text(
+                      "Formation en TensorFlow.""Formation en Keras",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2!
+                          .copyWith(fontSize: 16),
+                    ),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.spaceAround,
+                  buttonHeight: 52.0,
+                  buttonMinWidth: 90.0,
+                  children: <Widget>[
+
+                    FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0)),
+                      onPressed: () {
+                        cardA.currentState?.collapse();
+                      },
+                      child:  Column(
+                        children: <Widget>[
+                          Icon(Icons.arrow_upward),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2.0),
+                          ),
+                          Text('Close'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+
+      },
+      ),
+    );
+  }
+}
