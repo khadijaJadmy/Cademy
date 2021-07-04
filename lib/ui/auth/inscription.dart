@@ -157,68 +157,28 @@ class _InscriptionState extends State<Inscription> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      height: 300,
+                      height: 380,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/images/wave.png'),
+                              image: AssetImage('assets/images/blog.png'),
                               fit: BoxFit.fill)),
                       child: Stack(
                         children: <Widget>[
-                          Positioned(
-                              left: 30,
-                              width: 80,
-                              height: 200,
-                              child:
-                                  // FadeAnimation(1,
-                                  Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/light-1.png'))),
-                              )
-                              //),
-                              ),
-                          Positioned(
-                              left: 140,
-                              width: 80,
-                              height: 150,
-                              child:
-                                  // FadeAnimation(1.3,
-                                  Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/light-2.png'))),
-                              )
-                              //),
-                              ),
-                          Positioned(
-                              right: 40,
-                              top: 40,
-                              width: 80,
-                              height: 150,
-                              child:
-                                  //FadeAnimation(1.5,
-                                  Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/clock.png'))),
-                              )
-                              //),
-                              ),
+                 
+                
+                       
                           Positioned(
                               child:
                                   // FadeAnimation(1.6,
                                   Container(
-                            margin: EdgeInsets.only(top: 50),
+                            margin: EdgeInsets.only(top: 330),
                             child: Center(
                               child: Text(
                                 "SignIn",
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold),
+                                    color: Colors.black,
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           )
@@ -334,8 +294,10 @@ class _InscriptionState extends State<Inscription> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(155, 178, 161, 1),
-                                    Color.fromRGBO(155, 178, 161, .6),
+                                    // Color.fromRGBO(155, 178, 161, 1),
+                                    // Color.fromRGBO(155, 178, 161, .6),
+                                      Color.fromRGBO(9, 189, 180, 1),
+                                    Color.fromRGBO(9, 189, 180, 0.4),
                                   ])),
                               child: Center(
                                   child: Text(

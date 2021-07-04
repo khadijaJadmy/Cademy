@@ -12,14 +12,14 @@ class OpaqueImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Image.asset(
+        Image.network(
           imageUrl,
           width: double.maxFinite!=null?double.maxFinite:100,
           height: double.maxFinite!=null?double.maxFinite:100,
           fit: BoxFit.fill,
         ),
         Container(
-          color: primaryColorOpacity.withOpacity(0.85),
+          color: Color.fromRGBO(9, 189, 180,0.6),
         ),
       ],
     );

@@ -11,6 +11,7 @@ class Professor {
      String description;
      String profession;
      String  niveau;
+     String id;
 
-  Professor({  this.name,   this.formation,   this.category,  this.image, this.email,  this.course,this.description,this.profession,this.niveau});
+  Professor({ this.id, this.name,   this.formation,   this.category,  this.image, this.email,  this.course,this.description,this.profession,this.niveau});
 }

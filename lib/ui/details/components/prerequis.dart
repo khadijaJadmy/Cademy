@@ -102,7 +102,7 @@ class PreRequis extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: VideoPlayerScreen(),
+                child: VideoPlayerScreen(product.course.video),
               ),
             ),
           ),

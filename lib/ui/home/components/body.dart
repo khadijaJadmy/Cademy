@@ -65,6 +65,17 @@ class _BodyState extends State<Body> {
         ),
       );
     }
+    if (index == 0) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              Body(),
+        ),
+      );
+    }
   }
 
   // Future<void> getList() async {
@@ -85,18 +96,87 @@ class _BodyState extends State<Body> {
   Future<void> getSearchResult() async {
     if (_searchCourseContrller.text != null) {
       // queryData(widget.searchText);
-      List<Professor> list = await queryData(_searchCourseContrller.text);
-      if (list != null) {
-        setState(() {
-          products = list;
+      // print("WE ARE INSIDE GETSEARCHRESULT");
+      // print("CONTROLLER VALUE IS ${_searchCourseContrller.text}");
+      // List<Professor> list = await queryData(_searchCourseContrller.text);
+      // if (list != null) {
+      //   print(list);
+      //   print("heeere is the results");
+      //   setState(() {
+      //     products = list;
+      //   });
+      // }  else {
+      //   NullThrownError();
+      // }
+      List<Course> newList1 = [];
+      List<Professor> newList2 = [];
+      Course featureData1;
+      Professor featureData2;
+      String uid = FirebaseAuth.instance.currentUser.uid;
+      int index = 0;
+      final profRef = Firestore.instance.collection("Professors");
+      profRef.getDocuments().then((QuerySnapshot querySnapshot) {
+        querySnapshot.documents.forEach((DocumentSnapshot doc) async {
+          profRef
+              .document(doc.id)
+              .get()
+              .then((DocumentSnapshot document) async {
+            QuerySnapshot featureSnapShot1 = await FirebaseFirestore.instance
+                .collection("Professors")
+                .doc(doc.id)
+                .collection("formations")
+                .where('nom_formation',
+                    isEqualTo: _searchCourseContrller.text.toUpperCase())
+                .get();
+            featureSnapShot1.docs.forEach((element) {
+              featureData1 = Course(
+                description: element.data()["description"],
+                category: element.data()['category'],
+                createur: element.data()["createur"],
+                nom_formation: element.data()["nom_formation"],
+                prix: element.data()["prix"],
+                date_sortie: element.data()["date_sortie"],
+                langue: element.data()["langue"],
+                image: element.data()["image"],
+                nombre_participants: element.data()["nombre_participants"],
+              );
+
+              featureData2 = Professor(
+                name: document.data()["name"],
+                formation: document.data()["formation"],
+                category: document.data()["category"],
+                image: document.data()["image"],
+                course: featureData1,
+              );
+              print("feature data $featureData2");
+              // setState(() {
+              newList2.add(featureData2);
+              print(featureData2.course.category);
+              // index++;
+              // });
+            });
+            print("THHHHHEE END OF SEARCH");
+            print(newList2);
+            print(_searchCourseContrller.text);
+            print(products);
+            print(newList2.length == 0);
+            if (newList2.length != 0) {
+              setState(() {
+                products = newList2;
+              });
+            } else {
+              setState(() {
+                products=[];
+              });
+              getListCourse();
+            }
+
+            // return newList2;
+          });
         });
-      } else if (_searchCourseContrller.text == "") {
-        getListProfByCategory('All');
-      } else {
-        NullThrownError();
-      }
+      });
     }
-    _searchCourseContrller.text = "";
+    //  _searchCourseContrller.text = "";
   }
 
   void getListCoursesbyCategory(String category) async {
@@ -134,29 +214,28 @@ class _BodyState extends State<Body> {
               featureData1 = Course(
                 description: element.data()["description"],
                 category: element.data()['category'],
-                createur:  element.data()["createur"],
-                nom_formation:  element.data()["nom_formation"],
-                prix:  element.data()["prix"],
-                date_sortie:  element.data()["date_sortie"],
-                langue:  element.data()["langue"],
-                image:  element.data()["image"],
+                createur: element.data()["createur"],
+                nom_formation: element.data()["nom_formation"],
+                prix: element.data()["prix"],
+                date_sortie: element.data()["date_sortie"],
+                langue: element.data()["langue"],
+                image: element.data()["image"],
                 nombre_participants: element.data()["nombre_participants"],
               );
-              if (featureData1.category == category) {
-                featureData2 = Professor(
-                  name: document.data()["name"],
-                  formation: document.data()["formation"],
-                  category: document.data()["category"],
-                  image: document.data()["image"],
-                  course: featureData1,
-                );
-                print("feature data $featureData2");
-                setState(() {
-                  products.add(featureData2);
-                  print(featureData2.course.category);
-                  index++;
-                });
-              }
+
+              featureData2 = Professor(
+                name: document.data()["name"],
+                formation: document.data()["formation"],
+                category: document.data()["category"],
+                image: document.data()["image"],
+                course: featureData1,
+              );
+              print("feature data $featureData2");
+              setState(() {
+                products.add(featureData2);
+                print(featureData2.course.category);
+                index++;
+              });
             });
           });
         });
@@ -208,15 +287,16 @@ class _BodyState extends State<Body> {
           featureSnapShot1.docs.forEach(
             (element) {
               featureData1 = Course(
-                  description: element.data()["description"],
+                description: element.data()["description"],
                 category: element.data()['category'],
-                createur:  element.data()["createur"],
-                nom_formation:  element.data()["nom_formation"],
-                prix:  element.data()["prix"],
-                date_sortie:  element.data()["date_sortie"],
-                langue:  element.data()["langue"],
-                image:  element.data()["image"],
+                createur: element.data()["createur"],
+                nom_formation: element.data()["nom_formation"],
+                prix: element.data()["prix"],
+                date_sortie: element.data()["date_sortie"],
+                langue: element.data()["langue"],
+                image: element.data()["image"],
                 nombre_participants: element.data()["nombre_participants"],
+                video: element.data()["video"],
               );
               print("inside course");
               print(featureData1);
@@ -300,14 +380,16 @@ class _BodyState extends State<Body> {
                         prefixIcon: GestureDetector(
                             child: Icon(Icons.search, color: Colors.black87),
                             onTap: () {
-                              print(true);
-                              print(_searchCourseContrller.text);
-                              getSearchResult();
+                              // print(true);
+                              // print(_searchCourseContrller.text);
+                              // getSearchResult();
                             }),
                         hintText: "Search",
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
                       ),
-                      onChanged: (val) {
+                      onSubmitted: (val) {
+                        print("THERE IS THE VALUE OF THE VAL");
+                        print(val);
                         getSearchResult();
                       },
                       controller: _searchCourseContrller,
@@ -351,7 +433,8 @@ class _BodyState extends State<Body> {
                             childAspectRatio: 0.75,
                           ),
                           itemBuilder: (context, index) => ItemCard(
-                              product: products[index],
+                              product: products[index].course,
+                              name: products[index].name,
                               press: () {
                                 Navigator.push(
                                     context,
@@ -432,7 +515,9 @@ class _BodyState extends State<Body> {
               margin: EdgeInsets.only(top: kDefaultPaddin / 4), //top padding 5
               height: 2,
               width: 30,
-              color: selectedIndex == index ? Colors.black : Colors.transparent,
+              color: selectedIndex == index
+                  ? Color.fromRGBO(9, 189, 180, 1)
+                  : Colors.transparent,
             )
           ],
         ),
@@ -455,19 +540,19 @@ class _BodyState extends State<Body> {
         },
       ),
       actions: <Widget>[
-        // IconButton(
-        //   icon: SvgPicture.asset(
-        //     "assets/icons/search.svg", width: 20,
-        //     // By default our  icon color is white
-        //     color: kTextColor,
-        //   ),
-        //   onPressed: () {
-        //     print(true);
-        //     print(_searchCourseContrller.text);
-        //     getSearchResult();
-        //     // queryData(_searchCourseContrller.text);
-        //   },
-        // ),
+        IconButton(
+          icon: SvgPicture.asset(
+            "assets/icons/notifications.svg", width: 20,
+            // By default our  icon color is white
+            color: kTextColor,
+          ),
+          onPressed: () {
+            print(true);
+            print(_searchCourseContrller.text);
+            getSearchResult();
+            // queryData(_searchCourseContrller.text);
+          },
+        ),
         IconButton(
           icon: SvgPicture.asset(
             "assets/icons/plus.svg", width: 20,
@@ -510,24 +595,38 @@ class _BodyState extends State<Body> {
             icon: Icon(
               Icons.home,
               size: 25,
+              color: Color.fromRGBO(9, 189, 180, 1),
             ),
-            title: Text('Home'),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                color: Color.fromRGBO(9, 189, 180, 1),
+              ),
+            ),
           ),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.search,
+                Icons.post_add_sharp,
                 size: 25,
-                color: Colors.black,
+                color: Color.fromRGBO(9, 189, 180, 1),
+                // color: Colors.black,
               ),
-              title: Text('Search'),
+              title: Text('Search',
+                  style: TextStyle(
+                    color: Color.fromRGBO(9, 189, 180, 1),
+                  )),
               backgroundColor: Colors.grey),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.school,
               size: 25,
-              color: Colors.black,
+              // color: Colors.black,
+              color: Color.fromRGBO(9, 189, 180, 1),
             ),
-            title: Text('Profile'),
+            title: Text('Professors',
+                style: TextStyle(
+                  color: Color.fromRGBO(9, 189, 180, 1),
+                )),
             backgroundColor: Colors.grey,
           ),
         ],

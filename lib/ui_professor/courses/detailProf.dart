@@ -402,18 +402,18 @@ class _DetailProfState extends State<DetailProf> {
         backgroundColor: Colors.white,
         actions: [
           // edit == false
-              // ? NotificationButton()
-            //  : 
-              IconButton(
-                  icon: Icon(
-                    Icons.check,
-                    size: 30,
-                    color: Color(0xff746bc9),
-                  ),
-                  onPressed: () {
-                    vaildation();
-                  },
-                ),
+          // ? NotificationButton()
+          //  :
+          IconButton(
+            icon: Icon(
+              Icons.check,
+              size: 30,
+              color: Color(0xff746bc9),
+            ),
+            onPressed: () {
+              vaildation();
+            },
+          ),
         ],
       ),
       body: centerCircle == false

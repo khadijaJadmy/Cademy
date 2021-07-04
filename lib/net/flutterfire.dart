@@ -111,6 +111,7 @@ Future<List<Professor>> getListCourses() async {
           },
         );
         print("listCourses");
+              // newList1.add(featureData1);
 
         print(document.exists);
         print(document.id);
@@ -153,7 +154,12 @@ Future<List<Professor>> getListProf() async {
           category: element.data()["category"],
           image: element.data()["image"],
           profession: element.data()["profession"],
-          course: new Course(description: "description", category: "category"));
+          id:element.data()["userId"],
+         
+          
+          
+          
+          );
       // final documentID = userDocument.documentID;
       newList.add(featureData);
     },
@@ -209,28 +215,83 @@ Future<List<Professor>> getListProfByCategory(String category) async {
 Future<List<Professor>> queryData(String queryData) async {
   Professor featureData;
   List<Professor> newList = [];
-  print(queryData.toLowerCase());
-  String firstLetterCapital =
-      queryData.substring(0, 1).toUpperCase() + queryData.substring(1);
-  print(firstLetterCapital);
-  QuerySnapshot featureSnapShot = await FirebaseFirestore.instance
-      .collection("Professors")
-      .where('nom_formation', isGreaterThanOrEqualTo: queryData.toUpperCase())
-      .get();
-  featureSnapShot.docs.forEach(
-    (element) {
-      featureData = Professor(
-          name: element.data()["name"],
-          formation: element.data()["formation"],
-          category: element.data()["category"],
-          image: element.data()["image"],
-          course: new Course(description: "description", category: "category"));
+  print(queryData.toUpperCase());
+  print("RAE WE HER");
+  // String firstLetterCapital =
+      // queryData.substring(0, 1).toUpperCase() + queryData.substring(1);
+  // print(firstLetterCapital);
+  // QuerySnapshot featureSnapShot = await FirebaseFirestore.instance
+  //     .collection("Professors")
+  //     // .where('nom_formation', isLessThanOrEqualTo: queryData.toUpperCase())
+  //     .get();
+  // featureSnapShot.docs.forEach(
+  //   (element) {
+  //     featureData = Professor(
+  //         name: element.data()["name"],
+  //         formation: element.data()["formation"],
+  //         category: element.data()["category"],
+  //         image: element.data()["image"],
+  //         course: new Course(description: "description", category: "category"));
 
-      newList.add(featureData);
-    },
-  );
-  print(newList[0].formation);
-  return newList;
+  //     newList.add(featureData);
+  //     print(featureData);
+  //   },
+  // );
+  // // print(newList[0].formation);
+  // return newList;
+   List<Course> newList1 = [];
+    List<Professor> newList2 = [];
+    Course featureData1;
+    Professor featureData2;
+    String uid = FirebaseAuth.instance.currentUser.uid;
+    int index = 0;
+   final profRef = Firestore.instance.collection("Professors");
+      profRef.getDocuments().then((QuerySnapshot querySnapshot) {
+        querySnapshot.documents.forEach((DocumentSnapshot doc) async {
+          profRef
+              .document(doc.id)
+              .get()
+              .then((DocumentSnapshot document) async {
+            QuerySnapshot featureSnapShot1 = await FirebaseFirestore.instance
+                .collection("Professors")
+                .doc(doc.id)
+                .collection("formations")
+                .where('nom_formation', isEqualTo: queryData.toUpperCase())
+                .get();
+            featureSnapShot1.docs.forEach((element) {
+              featureData1 = Course(
+                description: element.data()["description"],
+                category: element.data()['category'],
+                createur:  element.data()["createur"],
+                nom_formation:  element.data()["nom_formation"],
+                prix:  element.data()["prix"],
+                date_sortie:  element.data()["date_sortie"],
+                langue:  element.data()["langue"],
+                image:  element.data()["image"],
+                nombre_participants: element.data()["nombre_participants"],
+              );
+             
+                featureData2 = Professor(
+                  name: document.data()["name"],
+                  formation: document.data()["formation"],
+                  category: document.data()["category"],
+                  image: document.data()["image"],
+                  course: featureData1,
+                );
+                print("feature data $featureData2");
+                // setState(() {
+                  newList2.add(featureData2);
+                  print(featureData2.course.category);
+                  // index++;
+                // });
+              
+            });
+            print("THHHHHEE END OF SEARCH");
+            print(newList2);
+            return newList2;
+          });
+        });
+      });
 }
 
 Future<List<Professor>> getDispoProfessor(String queryData) async {

@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_wallet/student_interfaces/profile.dart';
 import 'package:crypto_wallet/ui/annonce/announce_list.dart';
+import 'package:crypto_wallet/ui/auth/authentification.dart';
 import 'package:crypto_wallet/ui/home/search_screen.dart';
 import 'package:crypto_wallet/ui/pages/favourites_page.dart';
 import 'package:crypto_wallet/ui/pages/people_page.dart';
@@ -7,20 +9,44 @@ import 'package:crypto_wallet/ui/pages/user_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+class NavigationDrawerWidget extends StatefulWidget {
+  @override
+  _NavigationDrawerWidgetState createState() => _NavigationDrawerWidgetState();
+}
 
-class NavigationDrawerWidget extends StatelessWidget {
+class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
   final padding = EdgeInsets.symmetric(horizontal: 20);
+  String name = "User";
+  String image =
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80";
+  getNameImageUser() async {
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        name = value.data()['name'];
+        image:
+        value.data()['image'];
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getNameImageUser();
+  }
+
   @override
   Widget build(BuildContext context) {
-   
-    final name =  FirebaseAuth.instance.currentUser.displayName.toString();
+    // final name =  FirebaseAuth.instance.currentUser.displayName.toString();
     final email = FirebaseAuth.instance.currentUser.email;
-    final urlImage =
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80';
+    final urlImage = image;
 
     return Drawer(
       child: Material(
-        color:Colors.white,
+        color: Colors.white,
         child: ListView(
           children: <Widget>[
             buildHeader(
@@ -29,7 +55,8 @@ class NavigationDrawerWidget extends StatelessWidget {
               email: email,
               onClicked: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => UserPage(
-                  name: FirebaseAuth.instance.currentUser.displayName.toString(),
+                  name:
+                      FirebaseAuth.instance.currentUser.displayName.toString(),
                   urlImage: urlImage,
                 ),
               )),
@@ -40,13 +67,14 @@ class NavigationDrawerWidget extends StatelessWidget {
                 children: [
                   //const SizedBox(height: 12),
                   //buildSearchField(),
+                  Divider(color: Colors.black54),
                   const SizedBox(height: 24),
                   buildMenuItem(
                     text: 'Online Professors',
                     icon: Icons.people,
                     onClicked: () => selectedItem(context, 0),
                   ),
-               
+
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'My ads',
@@ -59,15 +87,16 @@ class NavigationDrawerWidget extends StatelessWidget {
                     icon: Icons.person,
                     onClicked: () => selectedItem(context, 3),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 32),
                   buildMenuItem(
-                    text: 'Updates',
-                    icon: Icons.update,
-                    onClicked: () => selectedItem(context, 4),
-                  ),
-                  const SizedBox(height: 24),
-                  Divider(color: Colors.black54),
-                  
+                      text: 'Log Out',
+                      icon: Icons.logout,
+                      onClicked: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Authentification()));
+                      }),
                 ],
               ),
             ),
@@ -105,36 +134,10 @@ class NavigationDrawerWidget extends StatelessWidget {
                   ),
                 ],
               ),
-           
-           
             ],
           ),
         ),
       );
-
-  // Widget buildSearchField() {
-  //   final color = Colors.white;
-
-  //   return TextField(
-  //     style: TextStyle(color: color),
-  //     decoration: InputDecoration(
-  //       contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-  //       hintText: 'Search',
-  //       hintStyle: TextStyle(color: color),
-  //       prefixIcon: Icon(Icons.search, color: color),
-  //       filled: true,
-  //       fillColor: Colors.white12,
-  //       enabledBorder: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(5),
-  //         borderSide: BorderSide(color: color.withOpacity(0.7)),
-  //       ),
-  //       focusedBorder: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(5),
-  //         borderSide: BorderSide(color: color.withOpacity(0.7)),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget buildMenuItem({
     @required String text,
@@ -164,19 +167,15 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 2:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AnnounceList(),
-        )
-        
-        );
+        ));
         // Navigator.push(
         //           context, MaterialPageRoute(builder: (context) =>  AnnounceList()));
         break;
-       case 3:
+      case 3:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => Profile(),
-        )
-        
-        );
-            break;
+        ));
+        break;
     }
   }
 }

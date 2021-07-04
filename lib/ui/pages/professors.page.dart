@@ -33,7 +33,8 @@ class ProfessorsPage extends StatelessWidget {
                         childAspectRatio: 0.75,
                       ),
                       itemBuilder: (context, index) => ItemCard(
-                          product: state.pharmacies[index],
+                          product: state.pharmacies[index].course,
+name:state.pharmacies[index].name,
                           press: () {
                             Navigator.push(
                                 context,

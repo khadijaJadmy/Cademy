@@ -1,14 +1,17 @@
 import 'package:crypto_wallet/model/Professor.dart';
+import 'package:crypto_wallet/model/course.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../constant.dart';
 
 class ItemCard extends StatelessWidget {
-  final Professor product;
+  final Course product;
+  final String name;
   final Function press;
   const ItemCard({
     Key key,
     this.product,
+    this.name,
     this.press,
   }) : super(key: key);
 
@@ -22,59 +25,53 @@ class ItemCard extends StatelessWidget {
         children: <Widget>[
           // Expanded(
           //   // flex: 2,
-          //   child: 
+          //   child:
           Container(
-              // padding: EdgeInsets.all(kDefaultPaddin),
-               height: 100,
-               width: 150,
+            // padding: EdgeInsets.all(kDefaultPaddin),
+            height: 100,
+            width: 150,
+            decoration: BoxDecoration(
+                // color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(20),
+                shape: BoxShape.rectangle,
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(product.image),
+                )),
+            child: Container(
               decoration: BoxDecoration(
-                  // color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(20),
-                  shape: BoxShape.rectangle,
-                  image: 
-                  DecorationImage(
-                    fit: BoxFit.fill,
-                    image: 
-                    NetworkImage(
-                     product.course.image
-                    ),
-                  )
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient:
-                        LinearGradient(begin: Alignment.bottomRight, stops: [
-                      0.3,
-                      0.9
-                    ], colors: [
-                      Colors.grey.withOpacity(.5),
-                      Colors.grey.withOpacity(.2),
-                    ])
-                  ),
-              ), 
-                  // child: Hero(),
+                  gradient:
+                      LinearGradient(begin: Alignment.bottomRight, stops: [
+                    0.3,
+                    0.9
+                  ], colors: [
+                    Colors.grey.withOpacity(.5),
+                    Colors.grey.withOpacity(.2),
+                  ])),
+            ),
+            // child: Hero(),
 
-                // child: Align(
-                //   alignment: Alignment.bottomLeft,
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(15),
-                //     child: Text( "${product.formation.toUpperCase()}",style:
-                //      TextStyle(fontWeight: FontWeight.w700,color: Colors.white,backgroundColor: Colors.grey[500]),)
-                //   ),
-                // ),
+            // child: Align(
+            //   alignment: Alignment.bottomLeft,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(15),
+            //     child: Text( "${product.formation.toUpperCase()}",style:
+            //      TextStyle(fontWeight: FontWeight.w700,color: Colors.white,backgroundColor: Colors.grey[500]),)
+            //   ),
+            // ),
 
-                // child: Hero(
-                //   tag: "${product.formation}",
-                //   child: Image.asset(
-                //     "assets/images/" + product.image,
-                //     width: 100,
-                //     height: 50,
-                //     fit: BoxFit.cover,
-                //   )
-                //   ),
+            // child: Hero(
+            //   tag: "${product.formation}",
+            //   child: Image.asset(
+            //     "assets/images/" + product.image,
+            //     width: 100,
+            //     height: 50,
+            //     fit: BoxFit.cover,
+            //   )
+            //   ),
             //  ),
-           // ),
+            // ),
           ),
           SizedBox(
             height: 15,
@@ -84,7 +81,7 @@ class ItemCard extends StatelessWidget {
             children: [
               RichText(
                 text: TextSpan(
-                  text: "${product.course.nom_formation.toUpperCase()}",
+                  text: "${product.nom_formation.toUpperCase()}",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -93,35 +90,24 @@ class ItemCard extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(
+            height: 3,
+          ),
           Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 // products is out demo list
-                product.name,
-                style: TextStyle(color: Colors.grey[500]),
+                name,
+                style: TextStyle(color: Colors.grey[600]),
               ),
             ],
           ),
-          // Row(
-          //   children: [
-          //     Wrap(children: [
-          //       RichText(
-          //         text: TextSpan(
-          //           // style: Theme.of(context).textTheme.body1,
-          //           children: [
-          //             TextSpan(
-          //               text: product.formation.toUpperCase(),style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700)
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ]
-          //     ),
-          //   ],
-          // ),
+          SizedBox(
+            height: 3,
+          ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               RatingBar.builder(
                 initialRating: 3,
@@ -133,7 +119,7 @@ class ItemCard extends StatelessWidget {
                 itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
-                  color: Colors.amber,
+                  color: Color.fromRGBO(9, 189, 180,1),
                 ),
                 onRatingUpdate: (rating) {
                   print(rating);
@@ -141,14 +127,22 @@ class ItemCard extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(
+            height: 3,
+          ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                product.course.prix==null?"free":product.course.prix+"DH",
+                product.prix == null
+                    ? "free"
+                    : product.prix + "DH",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    backgroundColor: Colors.orange[200]),
+                   // backgroundColor: Color.fromRGBO(9, 189, 180,1),
+                    ),
               ),
+        
               SizedBox(
                 height: 20,
               )
@@ -160,21 +154,21 @@ class ItemCard extends StatelessWidget {
   }
 }
 
-          // Expanded(
-          //     child: Column(
-          //   children: [
-          //     Text(
-          //       // products is out demo list
-          //       product.name,
-          //       style: TextStyle(color: kTextLightColor),
-          //     ),
-          //     Divider(
-          //       height: 7,
-          //     ),
-          //     Text(
-          //       "${product.formation}",
-          //       style: TextStyle(fontWeight: FontWeight.bold),
-          //     ),
-          //   ],
-          // )
-          // ),
+// Expanded(
+//     child: Column(
+//   children: [
+//     Text(
+//       // products is out demo list
+//       product.name,
+//       style: TextStyle(color: kTextLightColor),
+//     ),
+//     Divider(
+//       height: 7,
+//     ),
+//     Text(
+//       "${product.formation}",
+//       style: TextStyle(fontWeight: FontWeight.bold),
+//     ),
+//   ],
+// )
+// ),

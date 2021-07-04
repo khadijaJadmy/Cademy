@@ -32,6 +32,7 @@ class _CreateProfState extends State<CreateProf> {
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController niveauController = new TextEditingController();
   TextEditingController imageController = new TextEditingController();
+  TextEditingController idController = new TextEditingController();
 
   bool isLoading = false;
   String profId;
@@ -39,6 +40,10 @@ class _CreateProfState extends State<CreateProf> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   i.File _pickedImage;
+   final snackBar = SnackBar(
+    content: Text('Update done successfully'),
+    backgroundColor: Colors.green,
+  );
 
   PickedFile _image;
   Future<void> getImage({ImageSource source}) async {
@@ -64,6 +69,7 @@ class _CreateProfState extends State<CreateProf> {
           email: element.data()['email'],
           image: element.data()['image'],
           niveau: element.data()['niveauEtudes'],
+          id: element.data()['userId'],
         );
         setState(() {
           nameController.text = professor.name;
@@ -72,6 +78,7 @@ class _CreateProfState extends State<CreateProf> {
           niveauController.text = professor.niveau;
           emailcontroller.text = professor.email;
           imageController.text = professor.image;
+          idController.text=professor.id;
           exist = true;
           print(professor.description);
           print("HERE INSIDE VERIFY");
@@ -106,15 +113,15 @@ class _CreateProfState extends State<CreateProf> {
 
   void createProf() async {
     final User user = auth.currentUser;
-    final uid = user.uid;
+    final uid = exist==false?user.uid:idController.text;
     profId = randomAlphaNumeric(16);
     if (_formKey.currentState.validate()) {
-      setState(() {
-        isLoading = true;
-        circular = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      //   circular = true;
+      // });
 
-      imageMap = await _uploadImage(image: _pickedImage);
+      imageMap = exist==true?imageController.text:await _uploadImage(image: _pickedImage);
       print(imageMap);
       Map<String, String> profData = {
         "name": nameController.text,
@@ -122,19 +129,22 @@ class _CreateProfState extends State<CreateProf> {
         "description": descriptionController.text,
         "niveauEtudes": niveauController.text,
         "email": emailcontroller.text,
-        "userId": uid,
+        "userId":uid,
         "image": imageMap
       };
       print(name);
       print(profession);
       print(profData);
 
-      databaseService.addProfData(profData, uid).then((value) {
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => AddCourse(uid)));
+      databaseService.addProfData(profData, uid,exist).then((value) {
+        print("GGGOOOOD");
+        print(exist);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // setState(() {
+        //   isLoading = false;
+        // });
+        // Navigator.pushReplacement(
+        //     context, MaterialPageRoute(builder: (context) => AddCourse(uid)));
       });
     }
   }

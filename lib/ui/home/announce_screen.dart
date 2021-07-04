@@ -2,6 +2,9 @@ import 'package:crypto_wallet/firestore/announceController.dart';
 import 'package:crypto_wallet/model/Professor.dart';
 import 'package:crypto_wallet/model/announce.dart';
 import 'package:crypto_wallet/net/flutterfire.dart';
+import 'package:crypto_wallet/ui/annonce/announce_list.dart';
+import 'package:crypto_wallet/ui/home/components/body.dart';
+import 'package:crypto_wallet/ui/home/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -35,6 +38,46 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
   int totalPages = 0;
   int pageSize = 20;
 
+  int selectedIndex = 0;
+
+  int _selectedIndex = 1;
+
+  int expandedHeight = 85;
+  void _onItemTapped(int index) {
+    if (index == 2) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              SearchScreen(),
+        ),
+      );
+    }
+    if (index == 1) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              AnnounceList(),
+        ),
+      );
+    }
+    if (index == 0) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              Body(),
+        ),
+      );
+    }
+  }
   ScrollController scrollController = new ScrollController();
   List<Professor> products;
 
@@ -107,6 +150,7 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      bottomNavigationBar: buttonBar(),
       appBar: buildAppBar(),
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -132,11 +176,14 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
                       Row(
                         children: [
                           Text(
-                            "Need",
+                            "       Need",
                             style: TextStyle(color: Colors.black, fontSize: 35),
                           ),
                         ],
                       ),
+                       Column(
+                  children: [Divider(color: Colors.black,thickness: 2, endIndent: 140,indent: 100,)],
+                ),
                         SizedBox(
                         height: 30,
                       ),
@@ -166,16 +213,19 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
                           // _showSnakBar("yeq");
                         },
                         child: Container(
-                          child: Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                           Container(
                             width: 130,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: Colors.green[300],
+                              color: Colors.grey,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Center(
                               child: Text(
-                                "Submit",
+                                "Cancel",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -184,6 +234,29 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
                                 ),
                               ),
                             ),
+                                           ),
+                              Container(
+                                width: 130,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(9, 189, 180,1),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      
+                                    ),
+                                  ),
+                                ),
+                              ),
+                  
+                      
+                            ],
                           ),
                         ),
                       ),
@@ -209,12 +282,12 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
       
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.green,
+          color: Color.fromRGBO(9, 189, 180,1),
           width: 1,
         )),
            prefixIcon: Icon(
           Icons.description,
-          color: Colors.grey,
+          color: Colors.black,
         ),
         labelText: "Description",
         helperText: "Describe your need",
@@ -233,13 +306,13 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
        
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.green,
+           color: Color.fromRGBO(9, 189, 180,1),
           width: 1,
         )
         ),
         prefixIcon: Icon(
           Icons.category,
-          color: Colors.grey,
+          color: Colors.black,
         ),
         labelText: "Category",
         helperText: "Specify the category of course needed",
@@ -248,7 +321,7 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
   }
  Widget titleTextField() {
     return TextFormField(
-      validator: (val) => val.isEmpty ? "Write title " : null,
+      validator: (val) => val.isEmpty ? "Title field should not be empty " : null,
       onChanged: (val) {
         title = val;
       },
@@ -257,13 +330,13 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
        
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.green,
+          color: Color.fromRGBO(9, 189, 180,1),
           width: 1,
         )
         ),
         prefixIcon: Icon(
           Icons.title,
-          color: Colors.grey,
+          color: Colors.black,
         ),
         labelText: "Title",
         helperText: "Give a title to your ad",
@@ -278,6 +351,44 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
       ),
      );
  }
+ BottomNavigationBar buttonBar() {
+    return BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              size: 25,
+              color:   Color.fromRGBO(9, 189, 180,1),
+            ),
+            title: Text('Home',style: TextStyle(color:   Color.fromRGBO(9, 189, 180,1),),),
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.post_add_sharp,
+                size: 25,
+                 color:   Color.fromRGBO(9, 189, 180,1),
+                // color: Colors.black,
+              ),
+              title: Text('Search',style: TextStyle(color:   Color.fromRGBO(9, 189, 180,1),)),
+             ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.school,
+              size: 25,
+              // color: Colors.black,
+                  color:   Color.fromRGBO(9, 189, 180,1),
+            ),
+            title: Text('Professors',style: TextStyle(color:   Color.fromRGBO(9, 189, 180,1),)),
+           
+          ),
+        ],
+        type: BottomNavigationBarType.shifting,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.black,
+        iconSize: 40,
+        onTap: _onItemTapped,
+        elevation: 5);
+  }
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,

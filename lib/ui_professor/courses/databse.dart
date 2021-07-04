@@ -7,9 +7,10 @@ class DatabaseService {
 
   // DatabaseService({this.uid});
   final FirebaseAuth auth = FirebaseAuth.instance;
-  Future<void> addProfData(Map profData, String profId) async {
+  Future<void> addProfData(Map profData, String profId,bool exist) async {
+  
     final User user = auth.currentUser;
-    final uid = user.uid;
+    final uid =exist==true?profId: user.uid;
     await Firestore.instance
         .collection("Professors")
         .document(uid)

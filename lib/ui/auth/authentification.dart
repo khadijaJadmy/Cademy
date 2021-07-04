@@ -186,76 +186,38 @@ class _AuthentificationState extends State<Authentification> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      height: 400,
+                      height: 459,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/images/wave.png'),
+                              image: AssetImage('assets/images/blog.png'),
                               fit: BoxFit.fill)),
                       child: Stack(
                         children: <Widget>[
-                          Positioned(
-                              left: 30,
-                              width: 80,
-                              height: 200,
-                              child:
-                                  // FadeAnimation(1,
-                                  Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/light-1.png'))),
-                              )
-                              //),
-                              ),
-                          Positioned(
-                              left: 140,
-                              width: 80,
-                              height: 150,
-                              child:
-                                  // FadeAnimation(1.3,
-                                  Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/light-2.png'))),
-                              )
-                              //),
-                              ),
-                          Positioned(
-                              right: 40,
-                              top: 40,
-                              width: 80,
-                              height: 150,
-                              child:
-                                  //FadeAnimation(1.5,
-                                  Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/clock.png'))),
-                              )
-                              //),
-                              ),
-                          Positioned(
-                              child:
-                                  // FadeAnimation(1.6,
-                                  Container(
-                            margin: EdgeInsets.only(top: 50),
+                      
+                    
+                    
+                          Container(
+                            margin: EdgeInsets.only(top: 390),
                             child: Center(
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Cademy",
+                                    style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 40,
+                            fontWeight: FontWeight.w500),
+                                  ),
+                                  Divider(thickness: 2, indent: 140,endIndent: 130,color: Colors.black,)
+                                ],
                               ),
+
                             ),
                           )
-                              //),
-                              )
                         ],
                       ),
                     ),
+                    // SizedBox(height: 6,),
                     Padding(
                       padding: EdgeInsets.all(30.0),
                       child: Column(
@@ -315,8 +277,11 @@ class _AuthentificationState extends State<Authentification> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(155, 178, 161, 1),
-                                    Color.fromRGBO(155, 178, 161, .6),
+                                    // Color.fromRGBO(155, 178, 161, 1),
+
+                                    Color.fromRGBO(9, 189, 180, 1),
+                                    Color.fromRGBO(9, 189, 180, 0.4),
+                                    // Color.fromRGBO(155, 178, 161, .6),
                                   ])),
                               child: Center(
                                   child: Text(

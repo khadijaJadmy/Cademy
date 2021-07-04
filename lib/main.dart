@@ -6,6 +6,7 @@ import 'package:crypto_wallet/ui/auth/authentification.dart';
 import 'package:crypto_wallet/ui/home/components/body.dart';
 import 'package:crypto_wallet/ui/home/home_screen.dart';
 import 'package:crypto_wallet/ui/pages/professors.page.dart';
+import 'package:crypto_wallet/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,7 @@ class MyApp extends StatelessWidget {
             '/pharmacies': (context) =>
                 // Body(),
                 // HomeScreen()
-                Authentification(),
+                SplashScreen(),
             //  ProfessorsPage()
           },
           initialRoute: '/pharmacies',

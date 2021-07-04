@@ -105,16 +105,16 @@ flutter:
     - family: Schyler
       fonts:
         - asset: fonts/Raleway-Thin.ttf
-        - asset: fonts/Raleway-Italic.ttf
+       
 
     - family: Roboto
       fonts:
-        - asset: fonts/Raleway-SemiBoldItalic.ttf
-        - asset: fonts/Raleway-Italic.ttf
+        - asset: fonts/Raleway-Regular.ttf
+     
     - family: Schyle
       fonts:
         - asset: fonts/Raleway-Thin.ttf
-        - asset: fonts/Raleway-Italic.ttf
+     
 
         
          

@@ -187,17 +187,22 @@ class _UpdateAnnounceScreenState extends State<UpdateAnnounceScreen> {
                           
                           // _showSnakBar("yeq");
                         },
-                        child: Container(
-                          child: Container(
+                        child: 
+                       
+                       Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                           Container(
                             width: 130,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: Colors.green[300],
+                              color: Colors.grey,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Center(
                               child: Text(
-                                "Submit",
+                                "Cancel",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -206,8 +211,31 @@ class _UpdateAnnounceScreenState extends State<UpdateAnnounceScreen> {
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                                           ),
+                              Container(
+                                width: 130,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(9, 189, 180,1),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      
+                                    ),
+                                  ),
+                                ),
+                              ),
+                  
+                      
+                            ],
+                          )
+                          )
                       ),
                     ],
                         
@@ -231,7 +259,7 @@ class _UpdateAnnounceScreenState extends State<UpdateAnnounceScreen> {
       
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.green,
+          color: Color.fromRGBO(9, 189, 180,1),
           width: 1,
         )),
            prefixIcon: Icon(
@@ -255,7 +283,7 @@ class _UpdateAnnounceScreenState extends State<UpdateAnnounceScreen> {
        
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.green,
+          color: Color.fromRGBO(9, 189, 180,1),
           width: 1,
         )
         ),
@@ -279,7 +307,7 @@ class _UpdateAnnounceScreenState extends State<UpdateAnnounceScreen> {
        
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Colors.green,
+          color: Color.fromRGBO(9, 189, 180,1),
           width: 1,
         )
         ),

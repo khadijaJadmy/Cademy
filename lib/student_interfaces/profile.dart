@@ -21,12 +21,14 @@ class _ProfileState extends State<Profile> {
   TextEditingController NSController = new TextEditingController();
   TextEditingController locationController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
- var imageMap;
- PickedFile _image;
+    TextEditingController imageController = new TextEditingController();
+
+  var imageMap;
+  PickedFile _image;
   StudentService databaseService = new StudentService();
   bool exist = false;
   bool isObscurePassword = true;
- i.File _pickedImage;
+  i.File _pickedImage;
   final snackBar = SnackBar(
     content: Text('Add done successfully'),
     backgroundColor: Colors.green,
@@ -34,7 +36,9 @@ class _ProfileState extends State<Profile> {
 
   void UpdateStudent() async {
     // if (_formKey.currentState.validate()) {
-
+print("YOU ARE INSIDE UPDATE");
+// print(_pickedImage);
+imageMap = await _uploadImage(image: _pickedImage);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     Map<String, String> studentData = {
@@ -42,7 +46,7 @@ class _ProfileState extends State<Profile> {
       "name": nameController.text,
       "location": locationController.text,
       "niveau_scholaire": NSController.text,
-      "image":imageMap,
+      "image": imageMap,
     };
     // print(studentData);
     databaseService.addStudentsData(studentData).then((value) {
@@ -55,14 +59,14 @@ class _ProfileState extends State<Profile> {
     // if (_formKey.currentState.validate()) {
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-   imageMap = await _uploadImage(image: _pickedImage);
+    imageMap = await _uploadImage(image: _pickedImage);
     Map<String, String> studentData = {
       "id": FirebaseAuth.instance.currentUser.uid,
       "name": nameController.text,
       "location": locationController.text,
       "role": roleController.text,
       "niveau_scholaire": NSController.text,
-      "image":imageMap,
+      "image": imageMap,
     };
     print(studentData);
     databaseService.addStudentsData(studentData).then((value) {
@@ -85,12 +89,14 @@ class _ProfileState extends State<Profile> {
           location: element.data()['location'],
           niveau_scholaire: element.data()['niveau_scholaire'],
           id: element.data()['id'],
+             image: element.data()['image'],
         );
         setState(() {
           nameController.text = student.name;
           locationController.text = student.location;
           NSController.text = student.niveau_scholaire;
           emailController.text = FirebaseAuth.instance.currentUser.email;
+          imageController.text=student.image;
           exist = true;
         });
         // print(student.niveau_scholaire);
@@ -99,14 +105,12 @@ class _ProfileState extends State<Profile> {
     });
   }
 
- 
-
-  
   Future<void> getImage({ImageSource source}) async {
     _image = await ImagePicker().getImage(source: source);
     if (_image != null) {
       setState(() {
         _pickedImage = i.File(_image.path);
+        imageController.text=null;
       });
     }
   }
@@ -114,12 +118,12 @@ class _ProfileState extends State<Profile> {
   String userUid;
 
   Future _uploadImage({i.File image}) async {
-    StorageReference storageReference = FirebaseStorage.instance.ref().child("image/$userUid");
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child("image/$userUid");
     StorageUploadTask uploadTask = storageReference.putFile(image);
     StorageTaskSnapshot snapshot = await uploadTask.onComplete;
     var imageUrl = await snapshot.ref.getDownloadURL();
     return imageUrl;
-  
   }
 
   Widget imageProfile() {
@@ -188,27 +192,26 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     emailController.text = FirebaseAuth.instance.currentUser.email;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            //  color: Colors.white,
+        appBar: AppBar(
+          title: Text("Profile"),
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              //  color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
         ),
-      ),
-      body: Container(
-        padding: EdgeInsets.only(left: 15, top: 20, right: 15),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: ListView(
-            children: [
+        body: Container(
+          padding: EdgeInsets.only(left: 15, top: 20, right: 15),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: ListView(children: [
               Center(
                 child: Stack(
                   children: [
@@ -224,36 +227,46 @@ class _ProfileState extends State<Profile> {
                                 color: Colors.black.withOpacity(0.1))
                           ],
                           shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: 
-                              NetworkImage(
-                                'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
-                              ))),
-                       child: _image != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.file(
-                            _pickedImage,
-                            // width: 100,
-                            // height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          
-                        )
-                      : Container(
-                        
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(50)),
-                              
-                          // width: 100,
-                          // height: 100,
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Colors.grey[800],
-                          ),
-                        ),
+                      //     image: DecorationImage(
+                      //         fit: BoxFit.cover,
+                      //         image: NetworkImage(
+                      //           'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
+                      //         ))
+                      ),
+                      child: imageController.text != null  && _pickedImage==null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child:
+                              // imageController.text!=null?
+                              Image.network(imageController.text)
+                              // :Image.file(
+                              //   _pickedImage,
+                              //   // width: 100,
+                              //   // height: 100,
+                              //   fit: BoxFit.cover,
+                              // ),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(50),
+                                  image:  imageController.text == null ?
+                                  Image.file(
+                                _pickedImage,
+                                // width: 100,
+                                // height: 100,
+                                fit: BoxFit.cover,
+                              ):
+                                  DecorationImage(image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png"))
+                              ),
+
+                              // width: 100,
+                              // height: 100,
+                              // child: Icon(
+                              //   Icons.camera_alt,
+                              //   color: Colors.grey[800],
+                              // ),
+                            ),
                     ),
                     Positioned(
                       bottom: 0,
@@ -267,7 +280,7 @@ class _ProfileState extends State<Profile> {
                             width: 4,
                             color: Colors.white,
                           ),
-                          color: Colors.blue,
+                              color: Color.fromRGBO(9, 189, 180,1),
                         ),
                         child: GestureDetector(
                           child: Icon(
@@ -316,50 +329,98 @@ class _ProfileState extends State<Profile> {
               SizedBox(
                 height: 30,
               ),
-              Row(
+              Container(
+                  child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OutlinedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        "CANCEL",
-                        style: TextStyle(
-                            fontSize: 15,
-                            letterSpacing: 2,
-                            color: Colors.black),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 50),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)))),
-                  ElevatedButton(
-                    onPressed: () {
-                      exist != true ? CreateStudent() : UpdateStudent();
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop();
                     },
-                    child: Text(
-                      exist != true ? "SAVE" : 'UPDATE',
-                      style: TextStyle(
-                        fontSize: 15,
-                        letterSpacing: 2,
-                        color: Colors.white,
+                    child: Container(
+                      width: 130,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                      padding: EdgeInsets.symmetric(horizontal: 50),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
+                  GestureDetector(
+                    onTap: () {
+                    
+                      exist != true ? CreateStudent() : UpdateStudent();
+                    
+                    },
+                    child: Container(
+                      width: 130,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(9, 189, 180, 1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Submit",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // OutlinedButton(
+                  //     onPressed: () {
+                  //       Navigator.of(context).pop();
+                  //     },
+                  //     child: Text(
+                  //       "CANCEL",
+                  //       style: TextStyle(
+                  //           fontSize: 15,
+                  //           letterSpacing: 2,
+                  //           color: Colors.black),
+                  //     ),
+                  //     style: OutlinedButton.styleFrom(
+                  //         padding: EdgeInsets.symmetric(horizontal: 50),
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(20)))),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     exist != true ? CreateStudent() : UpdateStudent();
+                  //   },
+                  //   child: Text(
+                  //     exist != true ? "SAVE" : 'UPDATE',
+                  //     style: TextStyle(
+                  //       fontSize: 15,
+                  //       letterSpacing: 2,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  //   style: ElevatedButton.styleFrom(
+                  //     primary: Colors.blue,
+                  //     padding: EdgeInsets.symmetric(horizontal: 50),
+                  //     shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(20)),
+                  //   ),
+                  // ),
                 ],
-              )
-            ],
+              )),
+            ]),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget buildTextFieldName(
@@ -387,7 +448,7 @@ class _ProfileState extends State<Profile> {
           hintText: placeholder,
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.blue,
+                color: Color.fromRGBO(9, 189, 180,1),
             width: 1,
           )),
           hintStyle: TextStyle(
@@ -422,7 +483,7 @@ class _ProfileState extends State<Profile> {
           hintText: placeholder,
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.blue,
+                color: Color.fromRGBO(9, 189, 180,1),
             width: 1,
           )),
           hintStyle: TextStyle(
@@ -454,7 +515,7 @@ class _ProfileState extends State<Profile> {
           hintText: placeholder,
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.blue,
+                color: Color.fromRGBO(9, 189, 180,1),
             width: 1,
           )),
           hintStyle: TextStyle(
@@ -488,7 +549,7 @@ class _ProfileState extends State<Profile> {
           hintText: placeholder,
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.blue,
+                color: Color.fromRGBO(9, 189, 180,1),
             width: 1,
           )),
           hintStyle: TextStyle(
@@ -522,7 +583,7 @@ class _ProfileState extends State<Profile> {
           hintText: placeholder,
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.blue,
+                color: Color.fromRGBO(9, 189, 180,1),
             width: 1,
           )),
           hintStyle: TextStyle(
@@ -554,7 +615,7 @@ class _ProfileState extends State<Profile> {
           hintText: placeholder,
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.blue,
+                color: Color.fromRGBO(9, 189, 180,1),
             width: 1,
           )),
           hintStyle: TextStyle(

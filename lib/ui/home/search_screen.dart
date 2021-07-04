@@ -1,6 +1,8 @@
 import 'package:crypto_wallet/model/Professor.dart';
 import 'package:crypto_wallet/net/flutterfire.dart';
 import 'package:crypto_wallet/student_interfaces/profile_page.dart';
+import 'package:crypto_wallet/ui/annonce/announce_list.dart';
+import 'package:crypto_wallet/ui/home/components/body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -26,6 +28,48 @@ class _SearchScreenState extends State<SearchScreen> {
   List<dynamic> items = [];
   ScrollController scrollController = new ScrollController();
   List<Professor> products = [];
+  int selectedIndex = 0;
+  int _selectedIndex = 2;
+  int expandedHeight = 85;
+  void _onItemTapped(int index) {
+    if (index == 2) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              SearchScreen(),
+        ),
+      );
+    }
+    if (index == 1) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              AnnounceList(),
+        ),
+      );
+    }
+      if (index == 0) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              Body(),
+        ),
+      );
+    }
+    // if (index == 0) {
+    //   print("index $index");
+    //   Navigator.of(context).pop();
+    // }
+  }
 
   Future<void> getSearchResult(String query) async {
     print(query);
@@ -58,6 +102,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
+      bottomNavigationBar: navBarBottomm(),
       body: Center(
           child: Column(children: [
         Row(children: []),
@@ -134,7 +179,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
+                      //  color: Color.fromRGBO(244, 243, 243, 1),
                     ),
                     child: ListTile(
                       onTap: () {
@@ -153,30 +199,58 @@ class _SearchScreenState extends State<SearchScreen> {
                                 // mainAxisAlignment:
                                 // MainAxisAlignment.spaceBetween,
                                 children: [
-                                  CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(products[index].image),
-                                    radius: 28,
+                                  Container(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        border: Border.all(color: Colors.green,width: 2),
+                                        shape: BoxShape.circle,
+
+                                      ),
+                                      height: 50.0,
+                                      width: 50.0,
+                                       child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(products[index].image),
+                                      radius: 28,
+                                    ),
+                                    ),
                                   ),
+                                  // Container(
+                                  //   // height: 150,
+                                  //   // decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.green,),
+                                  //   child: CircleAvatar(
+                                  //     backgroundImage:
+                                  //         NetworkImage(products[index].image),
+                                  //     radius: 28,
+                                  //   ),
+                                  // ),
                                   SizedBox(
                                     width: 15,
                                   ),
                                   RichText(
                                     text: TextSpan(
-                                        text: products[index].name+"\n",
+                                        text: products[index].name + "\n",
                                         style: TextStyle(
-                                            fontSize: 22, color: Colors.black,fontWeight: FontWeight.bold
-                                            ),
-                                        children: <TextSpan>[
+                                            fontSize: 22,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                        children:[
                                           TextSpan(
                                             text: products[index].profession,
                                             style: TextStyle(
                                               fontSize: 17,
+                                              fontWeight: FontWeight.normal
+
                                               // fontStyle: FontStyle.italic,
                                               // fontWeight: FontWeight.bold,
                                             ),
+                                             
                                           ),
-                                        ]),
+                                          
+                                         
+                                        ]
+                                        ),
                                   ),
                                   // Text(
                                   //   products[index].name,
@@ -201,10 +275,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                   //     ],
                                   //   ),
                                   // ),
-                                  CircleAvatar(
-                                    backgroundColor: Colors.green,
-                                    radius: 7,
-                                  ),
+                                  // CircleAvatar(
+                                  //   backgroundColor: Colors.green,
+                                  //   radius: 7,
+                                  // ),
                                 ],
                               ),
                             ],
@@ -290,5 +364,54 @@ class _SearchScreenState extends State<SearchScreen> {
       //   controller: queryTextEditingController,
       // ),
     );
+  }
+  BottomNavigationBar navBarBottomm() {
+    return BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              size: 25,
+              color: Color.fromRGBO(9, 189, 180, 1),
+            ),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                color: Color.fromRGBO(9, 189, 180, 1),
+              ),
+            ),
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.post_add_sharp,
+                size: 25,
+                color: Color.fromRGBO(9, 189, 180, 1),
+                // color: Colors.black,
+              ),
+              title: Text('Search',
+                  style: TextStyle(
+                    color: Color.fromRGBO(9, 189, 180, 1),
+                  )),
+              ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.school,
+              size: 25,
+              // color: Colors.black,
+              color: Color.fromRGBO(9, 189, 180, 1),
+            ),
+            title: Text('Professors',
+                style: TextStyle(
+                  color: Color.fromRGBO(9, 189, 180, 1),
+                )),
+           
+          ),
+        ],
+        type: BottomNavigationBarType.shifting,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.black,
+        iconSize: 40,
+        onTap: _onItemTapped,
+        elevation: 5);
   }
 }
