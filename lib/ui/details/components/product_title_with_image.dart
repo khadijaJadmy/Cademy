@@ -22,13 +22,20 @@ class ProductTitleWithImage extends StatelessWidget {
       // height: MediaQuery.of(context).size.height+100,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.grey[200],
-          gradient: LinearGradient(begin: Alignment.bottomRight, stops: [
-            0.3,
-            0.9
-          ], colors: [
-            Colors.grey.withOpacity(.8),
-            Colors.grey.withOpacity(.2),
+          // color: Colors.grey[200],
+          gradient: LinearGradient(
+          //   begin: Alignment.bottomRight,
+          //    stops: [
+          //   0.3,
+          //   0.9
+          // ], 
+          colors: [
+            Color.fromRGBO(9, 189, 180, 0.2),
+            Color.fromRGBO(9, 189, 180, 0.3),
+            Color.fromRGBO(9, 189, 180, 0.5),
+            Color.fromRGBO(9, 189, 180, 1)
+            // Colors.grey.withOpacity(.8),
+            // Colors.grey.withOpacity(.2),
           ])),
       // padding: EdgeInsets.only(top: 40,left:10),
       // margin: EdgeInsets.only(top:40),

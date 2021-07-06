@@ -25,13 +25,9 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
   bool progress = false;
   TextEditingController queryTextEditingController =
       new TextEditingController();
-        TextEditingController categoryController =
-      new TextEditingController();
-        TextEditingController descriptionController =
-      new TextEditingController();
-          TextEditingController titleController =
-      new TextEditingController();
-      
+  TextEditingController categoryController = new TextEditingController();
+  TextEditingController descriptionController = new TextEditingController();
+  TextEditingController titleController = new TextEditingController();
 
   dynamic data;
   int currentPage = 0;
@@ -78,33 +74,35 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
       );
     }
   }
+
   ScrollController scrollController = new ScrollController();
   List<Professor> products;
 
   // final _formKey = GlobalKey<FormState>();
-  String annonceDescription, category,title;
+  String annonceDescription, category, title;
 
   bool isLoading = false;
 
   DatabaseService databaseService = new DatabaseService();
   final snackBar = SnackBar(
-            content: Text('Add done successfully!'),
-             backgroundColor: Colors.green,);
+    content: Text('Add done successfully!'),
+    backgroundColor: Colors.green,
+  );
 
   void CreateAnnounce() async {
     if (_formKey.currentState.validate()) {
       setState(() {
         isLoading = true;
-    
+
         progress = false;
-        categoryController.text="";
-        descriptionController.text=""; 
-          titleController.text="";
+        categoryController.text = "";
+        descriptionController.text = "";
+        titleController.text = "";
       });
- ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
       Map<String, String> profData = {
-        "id":randomAlphaNumeric(16),
+        "id": randomAlphaNumeric(16),
         "category": category,
         "description": annonceDescription,
         "title": title,
@@ -149,27 +147,27 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      bottomNavigationBar: buttonBar(),
-      appBar: buildAppBar(),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.all(6),
+        // resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: true,
+        // resizeToAvoidBottomInset: true,
+        bottomNavigationBar: buttonBar(),
+        appBar: buildAppBar(),
+        body: SingleChildScrollView(
           child: Form(
               key: _formKey,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Expanded(
                   child: Column(
-                    
                     //  mainAxisAlignment: MainAxisAlignment.center,
-                        
+
                     children: [
-                            Row(
+                      Row(
                         children: [
                           Text(
                             "Publish your ",
-                            style: TextStyle(color: Colors.black87, fontSize: 20),
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 20),
                           ),
                         ],
                       ),
@@ -181,19 +179,26 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
                           ),
                         ],
                       ),
-                       Column(
-                  children: [Divider(color: Colors.black,thickness: 2, endIndent: 140,indent: 100,)],
-                ),
-                        SizedBox(
+                      Column(
+                        children: [
+                          Divider(
+                            color: Colors.black,
+                            thickness: 2,
+                            endIndent: 140,
+                            indent: 100,
+                          )
+                        ],
+                      ),
+                      SizedBox(
                         height: 30,
                       ),
                       // Padding(
                       //     padding: EdgeInsets.only(
                       //         top: MediaQuery.of(context).size.height/6)
-                      //   
+                      //
                       //      ),
                       titleTextField(),
-                       SizedBox(
+                      SizedBox(
                         height: 30,
                       ),
                       categoryTextField(),
@@ -204,64 +209,76 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
                       SizedBox(
                         height: 60,
                       ),
+                      //       GestureDetector(
+
                       GestureDetector(
                         onTap: () {
-                          CreateAnnounce();
-                          progress = true;
-                          
-                          
-                          // _showSnakBar("yeq");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  // ProfessorsPage()
+                                  //MyNavigationBar(),
+                                  AnnounceList(),
+                            ),
+                          );
+                          // Navigator.of(context).pop();
                         },
                         child: Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                                           Container(
-                            width: 130,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  
-                                ),
-                              ),
-                            ),
-                                           ),
                               Container(
                                 width: 130,
                                 height: 50,
                                 decoration: BoxDecoration(
-                                  color: Color.fromRGBO(9, 189, 180,1),
+                                  color: Colors.grey,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "Submit",
+                                    "Cancel",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
-                                      
                                     ),
                                   ),
                                 ),
                               ),
-                  
-                      
+                              GestureDetector(
+                                onTap: () {
+                                  CreateAnnounce();
+                                  progress = true;
+
+                                  // _showSnakBar("yeq");
+                                },
+                                child: Container(
+                                  width: 130,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(9, 189, 180, 1),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Submit",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
+                      // ),
                     ],
-                        
+
                     /// ),
                   ),
                 ),
@@ -278,14 +295,12 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
       controller: descriptionController,
       maxLines: 3,
       decoration: InputDecoration(
-      
-      
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Color.fromRGBO(9, 189, 180,1),
+          color: Color.fromRGBO(9, 189, 180, 1),
           width: 1,
         )),
-           prefixIcon: Icon(
+        prefixIcon: Icon(
           Icons.description,
           color: Colors.black,
         ),
@@ -303,13 +318,11 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
       },
       controller: categoryController,
       decoration: InputDecoration(
-       
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-           color: Color.fromRGBO(9, 189, 180,1),
+          color: Color.fromRGBO(9, 189, 180, 1),
           width: 1,
-        )
-        ),
+        )),
         prefixIcon: Icon(
           Icons.category,
           color: Colors.black,
@@ -319,21 +332,21 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
       ),
     );
   }
- Widget titleTextField() {
+
+  Widget titleTextField() {
     return TextFormField(
-      validator: (val) => val.isEmpty ? "Title field should not be empty " : null,
+      validator: (val) =>
+          val.isEmpty ? "Title field should not be empty " : null,
       onChanged: (val) {
         title = val;
       },
       controller: titleController,
       decoration: InputDecoration(
-       
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-          color: Color.fromRGBO(9, 189, 180,1),
+          color: Color.fromRGBO(9, 189, 180, 1),
           width: 1,
-        )
-        ),
+        )),
         prefixIcon: Icon(
           Icons.title,
           color: Colors.black,
@@ -345,41 +358,52 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
   }
 
   _showSnakBar(String msg) {
-     Scaffold.of(context).showSnackBar(
+    Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
       ),
-     );
- }
- BottomNavigationBar buttonBar() {
+    );
+  }
+
+  BottomNavigationBar buttonBar() {
     return BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
               size: 25,
-              color:   Color.fromRGBO(9, 189, 180,1),
+              color: Color.fromRGBO(9, 189, 180, 1),
             ),
-            title: Text('Home',style: TextStyle(color:   Color.fromRGBO(9, 189, 180,1),),),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                color: Color.fromRGBO(9, 189, 180, 1),
+              ),
+            ),
           ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.post_add_sharp,
-                size: 25,
-                 color:   Color.fromRGBO(9, 189, 180,1),
-                // color: Colors.black,
-              ),
-              title: Text('Search',style: TextStyle(color:   Color.fromRGBO(9, 189, 180,1),)),
-             ),
+            icon: Icon(
+              Icons.post_add_sharp,
+              size: 25,
+              color: Color.fromRGBO(9, 189, 180, 1),
+              // color: Colors.black,
+            ),
+            title: Text('Search',
+                style: TextStyle(
+                  color: Color.fromRGBO(9, 189, 180, 1),
+                )),
+          ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.school,
               size: 25,
               // color: Colors.black,
-                  color:   Color.fromRGBO(9, 189, 180,1),
+              color: Color.fromRGBO(9, 189, 180, 1),
             ),
-            title: Text('Professors',style: TextStyle(color:   Color.fromRGBO(9, 189, 180,1),)),
-           
+            title: Text('Professors',
+                style: TextStyle(
+                  color: Color.fromRGBO(9, 189, 180, 1),
+                )),
           ),
         ],
         type: BottomNavigationBarType.shifting,
@@ -389,20 +413,20 @@ class _AnnounceScreenState extends State<AnnounceScreen> {
         onTap: _onItemTapped,
         elevation: 5);
   }
+
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: SvgPicture.asset("assets/icons/back.svg",width: 20,),
+        icon: SvgPicture.asset(
+          "assets/icons/back.svg",
+          width: 20,
+        ),
         onPressed: () {
           Navigator.pop(context);
         },
       ),
-
-  
-      
     );
   }
-    
 }

@@ -67,11 +67,18 @@ dependencies:
   expansion_card:
   flutter_rating_bar: ^4.0.0
   flick_video_player:
+  font_awesome_flutter:
+  google_fonts:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: 
 
+flutter_icons:
+  image_path: "assets/images/logo.jpeg" 
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

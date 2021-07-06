@@ -80,12 +80,14 @@ class ItemCard extends StatelessWidget {
             // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               RichText(
+                textAlign: TextAlign.center,
                 text: TextSpan(
                   text: "${product.nom_formation.toUpperCase()}",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                       color: Colors.black),
+
                 ),
               ),
             ],

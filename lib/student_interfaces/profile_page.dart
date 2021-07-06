@@ -24,6 +24,7 @@ import 'package:crypto_wallet/ui/home/components/item_card.dart';
 import 'package:crypto_wallet/ui/home/search_screen.dart';
 import 'package:crypto_wallet/widgets/navbarBottom.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
@@ -177,14 +178,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             //   child:
                             Stack(children: [
                               Container(
+                                
                                 // height: MediaQuery.of(context).size.height/4,
                                 //  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/anne.jpeg"))),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SizedBox(
-                                      height: 15,
-                                    ),
+                                    // SizedBox(
+                                    //   height: 15,
+                                    // ),
                                     RadialProgress(
                                         width: 4,
                                         goalCompleted: 0.9,
@@ -197,12 +199,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                               BorderRadius.circular(20.0),
                                           child: Image.network(
                                             widget.professor.image,
-                                            width: 100,
+                                            width: 80,
+                                            fit: BoxFit.fitHeight,
                                           ),
                                         )),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
+                                    // SizedBox(
+                                    //   height: 5,
+                                    // ),
 
                                     // Row(
                                     //   mainAxisAlignment: MainAxisAlignment.center,
@@ -280,23 +283,31 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {
                             showConfirmationDialog(context);
                           },
-                          child: Text("Signal",
-                              style: TextStyle(color: Colors.red[200])),
-                        ),
-                        Tooltip(
-                          message: "Signal this profesor",
-                          child: Icon(
-                            Icons.block,
-                            color: Colors.red,
+                          child: Row(
+                            children: [
+                              Text("Signal",
+                                  style: TextStyle(color: Colors.red[200])),
+                              Icon(
+                                Icons.block,
+                                color: Colors.red,
+                              ),
+                            ],
                           ),
-                          height: 20,
-                          padding: const EdgeInsets.all(8.0),
-                          preferBelow: false,
-                          textStyle: const TextStyle(
-                            fontSize: 15,
-                          ),
-                          showDuration: const Duration(seconds: 2),
                         ),
+                        // Tooltip(
+                        //   message: "Signal this profesor",
+                        //   child: Icon(
+                        //     Icons.block,
+                        //     color: Colors.red,
+                        //   ),
+                        //   height: 20,
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   preferBelow: false,
+                        //   textStyle: const TextStyle(
+                        //     fontSize: 15,
+                        //   ),
+                        //   showDuration: const Duration(seconds: 2),
+                        // ),
                         SizedBox(
                           width: 16,
                         ),
@@ -309,12 +320,21 @@ class _ProfilePageState extends State<ProfilePage> {
                             );
                             await launch('$link');
                           },
-                          child: Text("Chat",
-                              style: TextStyle(
-                                  color: Color.fromRGBO(9, 189, 180, 1),
-                                  fontSize: 15)),
+                          child: Row(
+                            children: [
+                              Text("Chat",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(9, 189, 180, 1),
+                                      fontSize: 15)),
+                              // Icon(Icons.chat, color: Color.fromRGBO(9, 189, 180, 1)),
+                              Icon(
+                                FontAwesomeIcons.whatsapp,
+                                color: Color(0xff09bdb4),
+                                size: 20.0,
+                              )
+                            ],
+                          ),
                         ),
-                        Icon(Icons.chat, color: Color.fromRGBO(9, 189, 180, 1)),
                       ],
                     ),
                   ]),
@@ -586,7 +606,7 @@ class _CustomDialogState extends State<CustomDialog> {
         SizedBox(
             width: 100,
             child: RaisedButton(
-              color: Colors.blue,
+              color: Colors.red[200],
               onPressed: () {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);

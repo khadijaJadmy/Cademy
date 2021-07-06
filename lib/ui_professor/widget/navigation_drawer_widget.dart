@@ -12,11 +12,11 @@ import 'package:crypto_wallet/ui_professor/page/ajoute_formation.dart';
 import 'package:crypto_wallet/ui_professor/page/formation_list.dart';
 import 'package:crypto_wallet/ui_professor/page/mes_formations.dart';
 import 'package:crypto_wallet/ui_professor/page/offre_page.dart';
-import 'package:firebase_auth/firebase_auth.dart' ;
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
-import '../expansion_tile_card_demo.dart';
+import '../formationList.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   @override
@@ -26,41 +26,40 @@ class NavigationDrawerWidget extends StatefulWidget {
 class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
   final padding = EdgeInsets.symmetric(horizontal: 20);
 
-     String name = "name";
-    String  email = FirebaseAuth.instance.currentUser.email;
-    final urlImage =
-        'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png';
+  String name = "name";
+  String email = FirebaseAuth.instance.currentUser.email;
+  final urlImage =
+      'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png';
 
-    Future<void> getUserInfo() async {
-      Users.User user;
-      QuerySnapshot featureSnapShot1 =
-          await FirebaseFirestore.instance.collection("Users").get();
-      featureSnapShot1.docs.forEach((element) {
-        if (element.documentID == FirebaseAuth.instance.currentUser.uid) {
-          user = new Users.User(
-            name: element.data()['name'],
-            email: element.data()['email'],
-          );
-          setState(() {
-            name = user.name!=null?user.name:name;
-            email = user.email!=null?user.email:email;
-          });
-        }
-      });
-    
-    }
+  Future<void> getUserInfo() async {
+    Users.User user;
+    QuerySnapshot featureSnapShot1 =
+        await FirebaseFirestore.instance.collection("Users").get();
+    featureSnapShot1.docs.forEach((element) {
+      if (element.documentID == FirebaseAuth.instance.currentUser.uid) {
+        user = new Users.User(
+          name: element.data()['name'],
+          email: element.data()['email'],
+        );
+        setState(() {
+          name = user.name != null ? user.name : name;
+          email = user.email != null ? user.email : email;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     getUserInfo();
   }
+
   @override
   Widget build(BuildContext context) {
-
-
     return Drawer(
       child: Material(
-        color: Color.fromRGBO(155, 178, 161, 1),
+        color: Colors.white,
         child: ListView(
           children: <Widget>[
             buildHeader(
@@ -88,7 +87,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ExpansionTileCardDemo(),
+                              builder: (context) => HotelHomeScreen(),
                             ));
                       }),
                   const SizedBox(height: 6),
@@ -116,7 +115,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     )),
                   ),
                   const SizedBox(height: 20),
-                  Divider(color: Colors.white70),
+                  Divider(color: Colors.black),
                   const SizedBox(height: 20),
                   buildMenuItem(
                     text: 'My courses',

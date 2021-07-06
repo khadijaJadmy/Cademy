@@ -7,9 +7,13 @@ import 'package:crypto_wallet/ui/home/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'bottom_bar.dart';
 import 'cookie_page.dart';
+import 'courses/addCourse.dart';
+import 'courses/createProf.dart';
 import 'widget/navigation_drawer_widget.dart';
 
 class AnnounceListStudents extends StatefulWidget {
@@ -22,10 +26,10 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
   final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
 
   TabController _tabController;
-   int selectedIndex = 0;
+  int selectedIndex = 0;
   int _selectedIndex = 0;
   int expandedHeight = 85;
-   List<dynamic> items = [];
+  List<dynamic> items = [];
   Announce announce;
   ScrollController scrollController = new ScrollController();
   List<Announce> products = [];
@@ -33,7 +37,7 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
   List<Announce> announceMath = [];
   List<Announce> announcePhysics = [];
   Future<void> getSearchResult() async {
-   List<Announce> newList1 = [];
+    List<Announce> newList1 = [];
     Announce featureData1;
 
     String uid = FirebaseAuth.instance.currentUser.uid;
@@ -51,34 +55,28 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
           featureSnapShot1.docs.forEach(
             (element) {
               featureData1 = Announce(
-                description: element.data()["description"],
-                category: element.data()['category'],
-                id:element.data()['id'],
-                title:element.data()['title']
-              );
-            print("FEATRE DATA");
-                print(featureData1);
+                  description: element.data()["description"],
+                  category: element.data()['category'],
+                  id: element.data()['id'],
+                  title: element.data()['title']);
+              print("FEATRE DATA");
+              print(featureData1);
             },
           );
-        
-     
+
           setState(() {
-            if(featureData1.category=="math"){
+            if (featureData1.category == "Maths") {
               announceMath.add(featureData1);
-            }
-            else if(featureData1.category=="physic"){
+            } else if (featureData1.category == "physic") {
               announcePhysics.add(featureData1);
-            }
-            else if(featureData1.category=="programming"){
+            } else if (featureData1.category == "programming") {
               announceProgramming.add(featureData1);
             }
             products.add(featureData1);
-          //  index++;
-            
-           
+            //  index++;
           });
-        // print( "LEEEEENGHHHH ${announceMath.length}");
-        //  print( "LEEEEENGHHHH ${announceProgramming.length}");
+          // print( "LEEEEENGHHHH ${announceMath.length}");
+          //  print( "LEEEEENGHHHH ${announceProgramming.length}");
         });
       });
     });
@@ -88,17 +86,17 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
     // print(announceProgramming);
     // print(announcePhysics);
     // print("hhhhhhhhhhheeere you are");
-
   }
+
   void _onItemTapped(int index) {
-    if (index == 2) {
+    if (index == 0) {
       print(index);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) =>
               //MyNavigationBar(),
-              SearchScreen(),
+              AnnounceListStudents(),
         ),
       );
     }
@@ -109,13 +107,20 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
         MaterialPageRoute(
           builder: (context) =>
               //MyNavigationBar(),
-              AnnounceList(),
+              AddCourse(FirebaseAuth.instance.currentUser.uid),
         ),
       );
     }
-    if (index == 0) {
+    if (index == 2) {
       print("index $index");
-      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              CreateProf(),
+        ),
+      );
     }
   }
 
@@ -129,33 +134,31 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawerWidget(),
-     appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: Color(0xFF545D68)),
-          onPressed: () {},
+        drawer: NavigationDrawerWidget(),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.menu, color: Color(0xFF545D68)),
+            onPressed: () {},
+          ),
         ),
- 
-      ),
-      bottomNavigationBar:buttonBar(),
-      body: ListView(
-        padding: EdgeInsets.only(left: 20.0),
-        children: <Widget>[
+        bottomNavigationBar: buttonBar(),
+        body: ListView(padding: EdgeInsets.only(left: 20.0), children: <Widget>[
           SizedBox(height: 15.0),
           Text('Student Ads',
               style: TextStyle(
                   fontFamily: 'Schyle',
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold)),
-          Divider(thickness: 2,indent: 80,endIndent: 110,color:Colors.black),
+          Divider(
+              thickness: 2, indent: 80, endIndent: 110, color: Colors.black),
           SizedBox(height: 15.0),
           TabBar(
               controller: _tabController,
               indicatorColor: Colors.transparent,
-              labelColor: Color(0xFFC88D67),
+              labelColor: Color(0xff09bdb4),
               isScrollable: true,
               labelPadding: EdgeInsets.only(right: 45.0),
               unselectedLabelColor: Color(0xFFCDCDCD),
@@ -181,7 +184,7 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
                         fontSize: 18,
                       )),
                 ),
-                   Tab(
+                Tab(
                   child: Text('Physic',
                       style: TextStyle(
                         fontFamily: 'Roboto',
@@ -189,21 +192,18 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
                       )),
                 )
               ]),
-             Container(
-                height: MediaQuery.of(context).size.height - 50.0,
-                width: double.infinity,
-                child: TabBarView(
-                  controller: _tabController,
-                  children:<Widget> [
-                    CookiePage(products),
-                    CookiePage(announceMath),
-                    CookiePage(announceProgramming),
-                    CookiePage(announcePhysics),
-
-                  ]))
-        ])
-    );
+          Container(
+              height: MediaQuery.of(context).size.height - 50.0,
+              width: double.infinity,
+              child: TabBarView(controller: _tabController, children: <Widget>[
+                CookiePage(products),
+                CookiePage(announceMath),
+                CookiePage(announceProgramming),
+                CookiePage(announcePhysics),
+              ]))
+        ]));
   }
+
   BottomNavigationBar buttonBar() {
     return BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -211,24 +211,36 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
             icon: Icon(
               Icons.home,
               size: 25,
+              color: Color.fromRGBO(9, 189, 180, 1),
             ),
-            title: Text('Home'),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                color: Color.fromRGBO(9, 189, 180, 1),
+              ),
+            ),
           ),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.search,
-                size: 25,
-                color: Colors.black,
+                FontAwesomeIcons.plusCircle,
+                color: Color.fromRGBO(9, 189, 180, 1),
+                size: 20.0,
               ),
-              title: Text('Search'),
+              title: Text('Add course',
+                  style: TextStyle(
+                    color: Color.fromRGBO(9, 189, 180, 1),
+                  )),
               backgroundColor: Colors.grey),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              size: 25,
-              color: Colors.black,
-            ),
-            title: Text('Profile'),
+            icon:Icon(
+                FontAwesomeIcons.user,
+                color: Color.fromRGBO(9, 189, 180, 1),
+                size: 20.0,
+              ),
+            title: Text('Profile',
+                style: TextStyle(
+                  color: Color.fromRGBO(9, 189, 180, 1),
+                )),
             backgroundColor: Colors.grey,
           ),
         ],
@@ -239,82 +251,76 @@ class _AnnounceListStudentsState extends State<AnnounceListStudents>
         onTap: _onItemTapped,
         elevation: 5);
   }
+
   Widget _buildCard(String category, String title, String description) {
-    return Column(
-        children: <Widget>[
-          SizedBox(height: 15.0),
-          
-          Container(
-              padding: EdgeInsets.only(right: 15.0),
-              width: MediaQuery.of(context).size.width - 30.0,
-              height: MediaQuery.of(context).size.height - 50.0,
-              child: GridView.count(
-                crossAxisCount: 2,
-                primary: false,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 15.0,
-                childAspectRatio: 0.8,
-                children: <Widget>[
-                  Padding(
-        padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
-        child: InkWell(
-       
-            child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 3.0,
-                          blurRadius: 5.0)
-                    ],
-                    color: Colors.white),
-                child: Column(children: [
-                  Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                    
-                          )),
-              
-                   Text(description),
-                          
-                          
-                  SizedBox(height: 7.0),
-                  Text(title,
-                      style: TextStyle(
-                          color: Color(0xFFCC8053),
-                          fontFamily: 'Varela',
-                          fontSize: 14.0)),
-                  Text(category,
-                      style: TextStyle(
-                          color: Color(0xFF575E67),
-                          fontFamily: 'Varela',
-                          fontSize: 14.0)),
-                  Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Container(color: Color(0xFFEBEBEB), height: 1.0)),
-                  Padding(
-                      padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // if (!added) ...[
-                              Icon(Icons.shopping_basket,
-                                  color: Color(0xFFD17E50), size: 12.0),
-                              Text('Add to cart',
+    return Column(children: <Widget>[
+      SizedBox(height: 15.0),
+      Container(
+          padding: EdgeInsets.only(right: 15.0),
+          width: MediaQuery.of(context).size.width - 30.0,
+          height: MediaQuery.of(context).size.height - 50.0,
+          child: GridView.count(
+              crossAxisCount: 2,
+              primary: false,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 15.0,
+              childAspectRatio: 0.8,
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.only(
+                        top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
+                    child: InkWell(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 3.0,
+                                      blurRadius: 5.0)
+                                ],
+                                color: Colors.white),
+                            child: Column(children: [
+                              Padding(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                  )),
+                              Text(description),
+                              SizedBox(height: 7.0),
+                              Text(title,
                                   style: TextStyle(
+                                      color: Color(0xFFCC8053),
                                       fontFamily: 'Varela',
-                                      color: Color(0xFFD17E50),
-                                      fontSize: 12.0))
-                   
-                          ]))
-                ])))
-                
-                )
-                ])
-          )]
-        );
+                                      fontSize: 14.0)),
+                              Text(category,
+                                  style: TextStyle(
+                                      color: Color(0xFF575E67),
+                                      fontFamily: 'Varela',
+                                      fontSize: 14.0)),
+                              Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Container(
+                                      color: Color(0xFFEBEBEB), height: 1.0)),
+                              Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 5.0, right: 5.0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // if (!added) ...[
+                                        Icon(Icons.shopping_basket,
+                                            color: Color(0xFFD17E50),
+                                            size: 12.0),
+                                        Text('Add to cart',
+                                            style: TextStyle(
+                                                fontFamily: 'Varela',
+                                                color: Color(0xFFD17E50),
+                                                fontSize: 12.0))
+                                      ]))
+                            ]))))
+              ]))
+    ]);
   }
-  
 }

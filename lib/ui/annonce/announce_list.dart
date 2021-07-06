@@ -27,6 +27,12 @@ class _AnnounceListState extends State<AnnounceList> {
   bool notObscure = false;
   TextEditingController queryTextEditingController =
       new TextEditingController();
+
+    final snackBar = SnackBar(
+    content: Text('Remove done successfully'),
+    backgroundColor: Colors.red,
+  );
+
   dynamic data;
   int currentPage = 0;
   int totalPages = 0;
@@ -180,8 +186,8 @@ class _AnnounceListState extends State<AnnounceList> {
                                 title: Text("Category : "+products[index].category.toUpperCase()+"\n"+
                                   products[index].title,
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: "Schyler",
+                                      fontSize: 15,
+                                      // fontFamily: "Schyler",
                                       fontWeight: FontWeight.w700),
                                 ),
                                 subtitle: Text("Publish at : 2021-07-08"),
@@ -259,6 +265,7 @@ class _AnnounceListState extends State<AnnounceList> {
                                               products[index].id);
                                           //  if(result==true){
                                           //  products.remove(products[index]);
+                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                           setState(() {
                                             products.remove(products[index]);
                                             //  getSearchResult();

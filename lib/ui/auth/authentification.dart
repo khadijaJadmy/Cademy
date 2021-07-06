@@ -21,14 +21,7 @@ class Authentification extends StatefulWidget {
 }
 
 class _AuthentificationState extends State<Authentification> {
-  Future<void> getList() async {
-    List<Professor> products = [];
-    List<Professor> list = await getListProf();
-    products = list;
-    print(products);
-    print(true);
-    return products;
-  }
+ 
 
   Future<void> verifyStatutOfUser(String uid) async {
     print("VALUEEE FALSE");
@@ -73,6 +66,10 @@ class _AuthentificationState extends State<Authentification> {
 
   TextEditingController _emailField = TextEditingController();
   TextEditingController _passwordField = TextEditingController();
+    final snackBar = SnackBar(
+    content: Text('Email or password incorrect, retry please !'),
+    backgroundColor: Colors.red,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -294,6 +291,10 @@ class _AuthentificationState extends State<Authentification> {
                             onTap: () async {
                               String shouldNavigate = await SignIn(
                                   _emailField.text, _passwordField.text);
+                              if(shouldNavigate=="false"){
+                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                              }
                               verifyStatutOfUser(shouldNavigate);
                             },
                           ),
@@ -310,7 +311,8 @@ class _AuthentificationState extends State<Authentification> {
                               Text(
                                 "Forgot Password?",
                                 style: TextStyle(
-                                    color: Color.fromRGBO(143, 148, 251, 1)),
+                                  //  color: Color.fromRGBO(143, 148, 251, 1)
+                                    ),
                               ),
                               SizedBox(
                                 width: 30,
@@ -319,7 +321,8 @@ class _AuthentificationState extends State<Authentification> {
                                 child: Text(
                                   "Create acount,",
                                   style: TextStyle(
-                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                   //   color: Color.fromRGBO(143, 148, 251, 1)
+                                   ),
                                 ),
                                 onTap: () {
                                   Navigator.push(

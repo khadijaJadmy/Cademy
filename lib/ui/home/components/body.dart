@@ -33,6 +33,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+    GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   List<Professor> products = [];
   List<Course> courses;
   int selectedIndex = 0;
@@ -337,6 +339,7 @@ class _BodyState extends State<Body> {
     // getFormationByCategory(null);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: buildAppBar(),
       drawer: NavigationDrawerWidget(),
       bottomNavigationBar: buttonBar(),
@@ -535,8 +538,9 @@ class _BodyState extends State<Body> {
           width: 20,
         ),
         onPressed: () {
-          onPressed:
-          () => Scaffold.of(context).openDrawer();
+          _scaffoldKey.currentState.openDrawer();
+          //  Scaffold.of(context).openDrawer();
+          // onPressed: () => Scaffold.of(context).openDrawer();
         },
       ),
       actions: <Widget>[

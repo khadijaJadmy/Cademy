@@ -339,7 +339,8 @@ class _InscriptionState extends State<Inscription> {
                               Text(
                                 "Forgot Password?",
                                 style: TextStyle(
-                                    color: Color.fromRGBO(143, 148, 251, 1)),
+                                 //   color: Color.fromRGBO(143, 148, 251, 1)
+                                 ),
                               ),
                               SizedBox(
                                 width: 30,
@@ -348,7 +349,8 @@ class _InscriptionState extends State<Inscription> {
                                 child: Text(
                                   "Already have acount,",
                                   style: TextStyle(
-                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                     // color: Color.fromRGBO(143, 148, 251, 1)
+                                      ),
                                 ),
                                 onTap: () {
                                   Navigator.push(

@@ -227,11 +227,11 @@ imageMap = await _uploadImage(image: _pickedImage);
                                 color: Colors.black.withOpacity(0.1))
                           ],
                           shape: BoxShape.circle,
-                      //     image: DecorationImage(
-                      //         fit: BoxFit.cover,
-                      //         image: NetworkImage(
-                      //           'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
-                      //         ))
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
+                              ))
                       ),
                       child: imageController.text != null  && _pickedImage==null
                           ? ClipRRect(

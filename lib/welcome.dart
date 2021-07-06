@@ -33,34 +33,59 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-           gradient: LinearGradient(colors: [
-             Color.fromRGBO(9, 189, 180, 0.3),
-              Color.fromRGBO(9, 189, 180, 0.2),
-               Color.fromRGBO(9, 189, 180, 0.5),
-                Color.fromRGBO(9, 189, 180, 1),
-
-           ])
-          // image: DecorationImage(
-          //     image: AssetImage('assets/images/bg2.jpg'),
-          //     fit: BoxFit.fitHeight),
-        ),
+            gradient: LinearGradient(colors: [
+          Color.fromRGBO(9, 189, 180, 0.3),
+          Color.fromRGBO(9, 189, 180, 0.2),
+          Color.fromRGBO(9, 189, 180, 0.5),
+          Color.fromRGBO(9, 189, 180, 0.3),
+        ])
+            // image: DecorationImage(
+            //     image: AssetImage('assets/images/bg2.jpg'),
+            //     fit: BoxFit.fitHeight),
+            ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Welcome to Cademy",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w400 ),textAlign: TextAlign.center,),
-              Align(
-                child: Container(
-                  width: 150,
-                  height:3,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10)),
+              Stack(children: <Widget>[
+                Image.asset(
+                  'assets/images/cademy2.png',
+                  alignment: Alignment.topCenter,
                 ),
-              ),
-              SizedBox(height: 20,),
-           //   Image.asset('assets/images/logo.jpeg')
-            //  SvgPicture.asset('assets/images/logo.jpeg'),
+                SizedBox(height: 10,),
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Welcome to Cademy",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text("Your Professor Online"),
+                      Align(
+                        child: Container(
+                          width: 150,
+                          height: 3,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+                      SizedBox(height: 20,)
+                    ],
+                  ),
+                )
+              ]),
+              //  Align(
+              //    alignment: Alignment.center,
+              //    child:
+              //    ),
+
+              // ),
+              // SizedBox(height: 20,),
+
+              //  SvgPicture.asset('assets/images/cademy2.png'),
             ],
           ),
         ),

@@ -79,24 +79,23 @@ class Description extends StatelessWidget {
               // ),
             ],
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0, top: 8),
-              child: Wrap(children: [
-                RichText(
-                  textAlign: TextAlign.start,
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.body1,
-                    children: [
-                      TextSpan(
-                        text: product.course.description,
-                      ),
-                    ],
-                  ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0, top: 8),
+            child:
+             Wrap(children: [
+              RichText(
+                textAlign: TextAlign.start,
+                text: TextSpan(
+                  style: Theme.of(context).textTheme.body1,
+                  children: [
+                    TextSpan(
+                      text: product.course.description,
+                    ),
+                  ],
                 ),
-              ]),
-            ),
-          ]),
+              ),
+            ]),
+          ),
         ],
       ),
     );

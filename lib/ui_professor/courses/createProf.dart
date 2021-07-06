@@ -4,12 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:random_string/random_string.dart';
 
 import 'dart:io' as i;
 
+import '../annonce_student_list.dart';
 import 'addCourse.dart';
 import 'databse.dart';
 
@@ -32,7 +34,6 @@ class _CreateProfState extends State<CreateProf> {
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController niveauController = new TextEditingController();
   TextEditingController imageController = new TextEditingController();
-  TextEditingController idController = new TextEditingController();
 
   bool isLoading = false;
   String profId;
@@ -40,18 +41,52 @@ class _CreateProfState extends State<CreateProf> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   i.File _pickedImage;
-   final snackBar = SnackBar(
-    content: Text('Update done successfully'),
-    backgroundColor: Colors.green,
-  );
 
   PickedFile _image;
+ int selectedIndex = 0;
+  int _selectedIndex = 2;
+   void _onItemTapped(int index) {
+    if (index == 0) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              AnnounceListStudents(),
+        ),
+      );
+    }
+    if (index == 1) {
+      print(index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              AddCourse(FirebaseAuth.instance.currentUser.uid),
+        ),
+      );
+    }
+    if (index == 2) {
+      print("index $index");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              //MyNavigationBar(),
+              CreateProf(),
+        ),
+      );
+    }
+  }
+  
   Future<void> getImage({ImageSource source}) async {
     _image = await ImagePicker().getImage(source: source);
     if (_image != null) {
       setState(() {
         _pickedImage = i.File(_image.path);
-        imageController.text=null;
+        imageController.text = null;
       });
     }
   }
@@ -69,7 +104,6 @@ class _CreateProfState extends State<CreateProf> {
           email: element.data()['email'],
           image: element.data()['image'],
           niveau: element.data()['niveauEtudes'],
-          id: element.data()['userId'],
         );
         setState(() {
           nameController.text = professor.name;
@@ -78,7 +112,6 @@ class _CreateProfState extends State<CreateProf> {
           niveauController.text = professor.niveau;
           emailcontroller.text = professor.email;
           imageController.text = professor.image;
-          idController.text=professor.id;
           exist = true;
           print(professor.description);
           print("HERE INSIDE VERIFY");
@@ -98,7 +131,7 @@ class _CreateProfState extends State<CreateProf> {
     StorageTaskSnapshot snapshot = await uploadTask.onComplete;
     var imageUrl = await snapshot.ref.getDownloadURL();
     setState(() {
-       imageController.text=null;
+      imageController.text = null;
     });
     return imageUrl;
   }
@@ -113,15 +146,15 @@ class _CreateProfState extends State<CreateProf> {
 
   void createProf() async {
     final User user = auth.currentUser;
-    final uid = exist==false?user.uid:idController.text;
+    final uid = user.uid;
     profId = randomAlphaNumeric(16);
     if (_formKey.currentState.validate()) {
-      // setState(() {
-      //   isLoading = true;
-      //   circular = true;
-      // });
+      setState(() {
+        isLoading = true;
+        circular = true;
+      });
 
-      imageMap = exist==true?imageController.text:await _uploadImage(image: _pickedImage);
+      imageMap = await _uploadImage(image: _pickedImage);
       print(imageMap);
       Map<String, String> profData = {
         "name": nameController.text,
@@ -129,22 +162,19 @@ class _CreateProfState extends State<CreateProf> {
         "description": descriptionController.text,
         "niveauEtudes": niveauController.text,
         "email": emailcontroller.text,
-        "userId":uid,
+        "userId": uid,
         "image": imageMap
       };
       print(name);
       print(profession);
       print(profData);
 
-      databaseService.addProfData(profData, uid,exist).then((value) {
-        print("GGGOOOOD");
-        print(exist);
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        // setState(() {
-        //   isLoading = false;
-        // });
-        // Navigator.pushReplacement(
-        //     context, MaterialPageRoute(builder: (context) => AddCourse(uid)));
+      databaseService.addProfData(profData, uid).then((value) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => AddCourse(uid)));
       });
     }
   }
@@ -158,6 +188,7 @@ class _CreateProfState extends State<CreateProf> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: buttonBar(),
       appBar: AppBar(
         leading: BackButton(
           color: Colors.black54,
@@ -168,92 +199,91 @@ class _CreateProfState extends State<CreateProf> {
         brightness: Brightness.light,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
+        title: Text("Profil"),
       ),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           children: <Widget>[
-            SizedBox(
-              height: 32,
-            ),
-             CircleAvatar(
-               backgroundImage: imageController.text==null? NetworkImage(
-                                'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
-                              ): NetworkImage( imageController.text),
-                              radius: 60,
+            // SizedBox(
+            //   height: 12,
+            // ),
+            CircleAvatar(
+              backgroundImage: imageController.text == null
+                  ? NetworkImage(
+                      'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
+                    )
+                  : NetworkImage(imageController.text),
+              radius: 60,
+              // width: 100,
+              // height: 100,
+              // decoration: BoxDecoration(
+              //     border: Border.all(width: 4, color: Colors.white),
+              //     // borderRadius: BorderRadius.circular(26),
+              //     boxShadow: [
+              //       BoxShadow(
+              //           spreadRadius: 2,
+              //           blurRadius: 10,
+              //           color: Colors.black.withOpacity(0.1))
+              //     ],
+              //     shape: BoxShape.circle,
+              //     image: DecorationImage(
+              //         fit: BoxFit.cover,
+              //         image:
+              //         NetworkImage(
+              //           'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
+              //         ))),
+              child: _image != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Image.file(
+                        _pickedImage,
+                        // width: 100,
+                        // height: 100,
+                        fit: BoxFit.fill,
+                      ),
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(50),
+                        // shape: BoxShape.circle,
+                      ),
+
                       // width: 100,
                       // height: 100,
-                      // decoration: BoxDecoration(
-                      //     border: Border.all(width: 4, color: Colors.white),
-                      //     // borderRadius: BorderRadius.circular(26),
-                      //     boxShadow: [
-                      //       BoxShadow(
-                      //           spreadRadius: 2,
-                      //           blurRadius: 10,
-                      //           color: Colors.black.withOpacity(0.1))
-                      //     ],
-                      //     shape: BoxShape.circle,
-                      //     image: DecorationImage(
-                      //         fit: BoxFit.cover,
-                      //         image: 
-                      //         NetworkImage(
-                      //           'https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png',
-                      //         ))),
-                       child: _image != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: Image.file(
-                            _pickedImage,
-                            // width: 100,
-                            // height: 100,
-                            fit: BoxFit.fill,
-                          ),
-                          
-                        )
-                      : Container(
-                        
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(50),
-                              // shape: BoxShape.circle,
-                              
-                              ),
-                            
-                          // width: 100,
-                          // height: 100,
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                        
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 4,
-                            color: Colors.white,
-                          ),
-                          color: Colors.blue,
-                        ),
-                        child: GestureDetector(
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                          onTap: () {
-                            _showPicker(context);
-                          },
-                        ),
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: Colors.grey[800],
                       ),
                     ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 4,
+                    color: Colors.white,
+                  ),
+                  color: Color.fromRGBO(9, 189, 180, 1),
+                ),
+                child: GestureDetector(
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    _showPicker(context);
+                  },
+                ),
+              ),
+            ),
 
             // Center(
             //   child: GestureDetector(
@@ -268,33 +298,33 @@ class _CreateProfState extends State<CreateProf> {
             //                 backgroundImage: NetworkImage(imageController.text)
             //             )
 
-                        //: FileImage(_pickedImage)),
-                        // child: _image != null
-                        // : ClipRRect(
-                        //     borderRadius: BorderRadius.circular(50),
-                        //     child: Image.file(
-                        //       _pickedImage,
-                        //       width: 100,
-                        //       height: 100,
-                        //       fit: BoxFit.fitHeight,
-                        //     ),
-                        //   )
-                    //     : Container(
-                    //         decoration: BoxDecoration(
-                    //             color: Colors.grey[200],
-                    //             borderRadius: BorderRadius.circular(50)),
-                    //         width: 100,
-                    //         height: 100,
-                    //         child: Icon(
-                    //           Icons.camera_alt,
-                    //           color: Colors.grey[800],
-                    //         ),
-                    //       ),
-              //      ),
-          //    ),
-        //    ),
+            //: FileImage(_pickedImage)),
+            // child: _image != null
+            // : ClipRRect(
+            //     borderRadius: BorderRadius.circular(50),
+            //     child: Image.file(
+            //       _pickedImage,
+            //       width: 100,
+            //       height: 100,
+            //       fit: BoxFit.fitHeight,
+            //     ),
+            //   )
+            //     : Container(
+            //         decoration: BoxDecoration(
+            //             color: Colors.grey[200],
+            //             borderRadius: BorderRadius.circular(50)),
+            //         width: 100,
+            //         height: 100,
+            //         child: Icon(
+            //           Icons.camera_alt,
+            //           color: Colors.grey[800],
+            //         ),
+            //       ),
+            //      ),
+            //    ),
+            //    ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             nameTextField(),
             SizedBox(
@@ -326,7 +356,7 @@ class _CreateProfState extends State<CreateProf> {
                     width: 200,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.teal,
+                      color: Color(0xff09bdb4),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
@@ -349,6 +379,7 @@ class _CreateProfState extends State<CreateProf> {
         ),
       ),
     );
+    
   }
 
   // Widget imageProfile() {
@@ -406,6 +437,8 @@ class _CreateProfState extends State<CreateProf> {
             ),
           );
         });
+
+    
   }
 
   Widget nameTextField() {
@@ -417,22 +450,24 @@ class _CreateProfState extends State<CreateProf> {
         print(name);
       },
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
-        prefixIcon: Icon(
-          Icons.person,
-          color: Colors.green,
-        ),
-        labelText: "Name",
-        helperText: "Name can't be empty",
-      ),
+
+          // //contentPadding:: EdgeInsets.only(bottom: 5,left:10),
+          // //contentPadding:: EdgeInsets.only(top: 4,bottom: 4,left: 6,right: 6),
+          labelText: 'Name',
+          labelStyle: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Colors.blue,
+            width: 1,
+          )),
+          hintStyle: TextStyle(
+            fontSize: 14,
+            // fontWeight: FontWeight.bold,
+
+            color: Colors.grey,
+          )),
     );
   }
 
@@ -445,22 +480,24 @@ class _CreateProfState extends State<CreateProf> {
         print(profession);
       },
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
-        prefixIcon: Icon(
-          Icons.person,
-          color: Colors.green,
-        ),
-        labelText: "profession",
-        helperText: "It can't be empty",
-      ),
+
+          // //contentPadding:: EdgeInsets.only(bottom: 5,left:10),
+          // //contentPadding:: EdgeInsets.only(top: 4,bottom: 4,left: 6,right: 6),
+          labelText: 'Profession',
+          labelStyle: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Colors.blue,
+            width: 1,
+          )),
+          hintStyle: TextStyle(
+            fontSize: 14,
+            // fontWeight: FontWeight.bold,
+
+            color: Colors.grey,
+          )),
     );
   }
 
@@ -474,18 +511,24 @@ class _CreateProfState extends State<CreateProf> {
       },
       maxLines: 4,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
-        labelText: "Description",
-        helperText: "Write about yourself",
-      ),
+
+          // //contentPadding:: EdgeInsets.only(bottom: 5,left:10),
+          // //contentPadding:: EdgeInsets.only(top: 4,bottom: 4,left: 6,right: 6),
+          labelText: 'Description',
+          labelStyle: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Colors.blue,
+            width: 1,
+          )),
+          hintStyle: TextStyle(
+            fontSize: 14,
+            // fontWeight: FontWeight.bold,
+
+            color: Colors.grey,
+          )),
     );
   }
 
@@ -498,21 +541,24 @@ class _CreateProfState extends State<CreateProf> {
         print(email);
       },
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
-        prefixIcon: Icon(
-          Icons.email,
-          color: Colors.green,
-        ),
-        labelText: "Email",
-      ),
+
+          // //contentPadding:: EdgeInsets.only(bottom: 5,left:10),
+          // //contentPadding:: EdgeInsets.only(top: 4,bottom: 4,left: 6,right: 6),
+          labelText: 'Email',
+          labelStyle: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Colors.blue,
+            width: 1,
+          )),
+          hintStyle: TextStyle(
+            fontSize: 14,
+            // fontWeight: FontWeight.bold,
+
+            color: Colors.grey,
+          )),
     );
   }
 
@@ -525,17 +571,71 @@ class _CreateProfState extends State<CreateProf> {
       },
       maxLines: 2,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
-        labelText: "Niveau d'etudes",
-      ),
+
+          // //contentPadding:: EdgeInsets.only(bottom: 5,left:10),
+          // //contentPadding:: EdgeInsets.only(top: 4,bottom: 4,left: 6,right: 6),
+          labelText: 'Level',
+          labelStyle: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: Colors.blue,
+            width: 1,
+          )),
+          hintStyle: TextStyle(
+            fontSize: 14,
+            // fontWeight: FontWeight.bold,
+
+            color: Colors.grey,
+          )),
     );
+  }
+  BottomNavigationBar buttonBar() {
+    return BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              size: 25,
+              color: Color.fromRGBO(9, 189, 180, 1),
+            ),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                color: Color.fromRGBO(9, 189, 180, 1),
+              ),
+            ),
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(
+                FontAwesomeIcons.plusCircle,
+                color: Color.fromRGBO(9, 189, 180, 1),
+                size: 20.0,
+              ),
+              title: Text('Add course',
+                  style: TextStyle(
+                    color: Color.fromRGBO(9, 189, 180, 1),
+                  )),
+             ),
+          BottomNavigationBarItem(
+            icon:Icon(
+                FontAwesomeIcons.user,
+                color: Color.fromRGBO(9, 189, 180, 1),
+                size: 20.0,
+              ),
+            title: Text('Profile',
+                style: TextStyle(
+                  color: Color.fromRGBO(9, 189, 180, 1),
+                )),
+         
+          ),
+        ],
+        type: BottomNavigationBarType.shifting,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.black,
+        iconSize: 40,
+        onTap: _onItemTapped,
+        elevation: 5);
   }
 }
